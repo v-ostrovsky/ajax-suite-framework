@@ -1,0 +1,9 @@
+<div id="sidemenu">
+	<div id="sidemenu-content" class="group" style="display: flex; flex-direction: column;">
+		<div tabindex=1 name="pnlAdmin"></div>
+		<div id="docsPanel" class="group" style="flex: 0 1 100%; display: flex; flex-direction: column;" tabindex=2 name="pnlDocs"></div>
+	</div>
+</div>
+<div id="mainPanel">
+	<div id="mainPanel-content" name="mainContent"></div>
+</div>

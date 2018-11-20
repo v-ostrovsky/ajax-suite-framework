@@ -1,0 +1,17 @@
+<div id="application-header" style="height: 70px; background-size: 100% 100%; margin-top: -25px; display: flex; justify-content: space-between">
+	<div id="logo" style="height: 100%; margin-left: 4%;">
+		<img style="height: 80%; margin: 30px 0px 0px 20px;" id="logo" src="asapp/application/config/images/logo.svg">
+	</div>
+	<div id="topmenu" style="height: 100%; margin-right: 20px;">
+		<img style="height: 100%;" src="asapp/application/config/images/line-left.png">
+		<div id="topmenu-body" style="background-size: 100% 100%;">
+			<div id="items" class="group" style="display: flex; margin-top: 30px; padding: 3px 6px;">
+				<button class="button button-text" style="display: none;" name="login"></button>
+				<button class="button button-text" style="display: none;" name="logout"></button>
+			</div>
+		</div>
+		<img style="height: 100%;" src="asapp/application/config/images/line-right.png">
+	</div>
+</div>
+
+<div id="application-content" name="content"></div>

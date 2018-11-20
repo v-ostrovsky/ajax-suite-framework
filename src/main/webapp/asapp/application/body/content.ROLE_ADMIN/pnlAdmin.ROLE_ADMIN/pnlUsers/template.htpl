@@ -1,0 +1,11 @@
+<div style="height: 100%; width: 600px; display: flex; flex-direction: column;">
+	<div class="buttons-top">
+		<div class="buttons-left"></div>
+		<div class="buttons-right">
+			<button class="button button-image" tabindex=1 name="create"></button>
+			<button class="button button-image" tabindex=2 name="edit"></button>
+			<button class="button button-image" tabindex=3 name="remove"></button>
+		</div>
+	</div>
+	<div class="table" tabindex=4 name="table"></div>
+</div>

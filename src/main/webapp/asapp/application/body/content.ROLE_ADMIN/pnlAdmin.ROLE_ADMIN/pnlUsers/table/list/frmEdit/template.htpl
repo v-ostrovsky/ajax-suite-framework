@@ -1,0 +1,26 @@
+<div class="field-group">
+	<div class="label" name="username-label"></div>
+	<input class="field" style="width: 150px;" type="text" tabindex=1 name="username" />
+</div>
+<div class="field-group">
+	<div class="label" name="firstName-label"></div>
+	<input class="field" style="width: 150px;" type="text" tabindex=2 name="firstName" />
+</div>
+<div class="field-group">
+	<div class="label" name="lastName-label"></div>
+	<input class="field" style="width: 150px;" type="text" tabindex=3 name="lastName" />
+</div>
+<div class="field-group">
+	<div class="label" name="password-label"></div>
+	<input class="field" style="width: 150px;" type="password" autocomplete="new-password" tabindex=4 name="password" />
+</div>
+<div class="field-group">
+	<div class="label" name="role-label"></div>
+	<div class="field" style="width: 150px;" type="role" tabindex=5 name="role"></div>
+</div>
+<div class="buttons-bottom">
+	<div class="buttons-left"></div>
+	<div class="buttons-right">
+		<button class="button button-text" tabindex=6 name="submit"></button>
+	</div>
+</div>

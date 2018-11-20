@@ -1,0 +1,5 @@
+<div class="table-cell table-row-handle" name="handle"></div>
+<div class="table-cell" name="username"></div>
+<div class="table-cell" name="firstName"></div>
+<div class="table-cell" name="lastName"></div>
+<div class="table-cell" name="roleText"></div>

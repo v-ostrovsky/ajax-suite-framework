@@ -1,0 +1,18 @@
+<div class="message" style="width: 400px; margin-bottom: 6px;" name="position-label"></div>
+<div class="group" style="display: flex; padding: 6px 12px; margin-bottom: 10px;" tabindex=1 name="position">
+	<div class="field-group" style="padding-right: 12px; display: flex;">
+		<div class="label" name="inside-label"></div>
+		<input type="radio" name="button" value="inside">
+	</div>
+	<div class="field-group" style="display: flex;">
+		<div class="label" name="before-label"></div>
+		<input type="radio" name="button" value="before">
+	</div>
+</div>
+<div class="group" style="width: 400px; height: 300px;" tabindex=2 name="where"></div>
+<div class="buttons-bottom">
+	<div class="buttons-left"></div>
+	<div class="buttons-right">
+		<button class="button button-text" tabindex=3 name="submit"></button>
+	</div>
+</div>

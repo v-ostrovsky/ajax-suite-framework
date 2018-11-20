@@ -1,0 +1,14 @@
+<div class="field-group">
+	<div class="label" name="code-label"></div>
+	<input class="field" style="float: right; width: 50px;" type="text" disabled name="code" />
+</div>
+<div class="field-group">
+	<div class="label" name="name-label"></div>
+	<textarea rows="5" class="field" style="width: 250px;" type="text" tabindex=1 name="name" />
+</div>
+<div class="buttons-bottom">
+	<div class="buttons-left"></div>
+	<div class="buttons-right">
+		<button class="button button-text" tabindex=2 name="submit"></button>
+	</div>
+</div>

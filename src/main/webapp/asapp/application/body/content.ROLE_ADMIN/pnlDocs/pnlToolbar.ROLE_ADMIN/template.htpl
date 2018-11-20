@@ -1,0 +1,6 @@
+<div>
+	<button class="button button-image" tabindex=1 name="create"></button>
+	<button class="button button-image" tabindex=2 name="edit"></button>
+	<button class="button button-image" tabindex=3 name="moveBranch"></button>
+	<button class="button button-image" tabindex=4 name="removeBranch"></button>
+</div>

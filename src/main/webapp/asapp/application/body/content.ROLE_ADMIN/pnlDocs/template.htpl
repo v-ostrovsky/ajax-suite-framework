@@ -1,0 +1,8 @@
+<div class="buttons-top" style="margin-left: 2px;">
+	<div class="buttons-left">
+		<button class="button button-image" tabindex=1 name="expandDown"></button>
+		<button class="button button-image" tabindex=2 name="collapseDown"></button>
+	</div>
+	<div class="buttons-right" name="crud"></div>
+</div>
+<div style="flex: 0 1 100%; overflow: auto;" tabindex=7 name="tree"></div>

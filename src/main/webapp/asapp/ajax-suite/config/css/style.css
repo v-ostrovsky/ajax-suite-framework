@@ -1,0 +1,327 @@
+/*
+* ------------- USER AGENT STYLESHEET --------------
+*/
+html * {
+	box-sizing: border-box;
+	border: none;
+	outline: none;
+	font-family: sans-serif;
+	font-size: 11px;
+}
+
+div {
+	user-select: none;
+}
+
+button {
+	background-color: rgba(0, 0, 0, 0);
+	padding: 0px;
+}
+
+/*
+* ------------- CONTROLS --------------
+*/
+.group {
+	border: 1px solid rgb(170, 170, 170);
+	border-radius: 6px;
+}
+
+.message {
+	padding-bottom: 6px;
+}
+
+.field-group {
+	display: flex;
+	justify-content: space-between;
+	padding: 3px 0px;
+}
+
+.label {
+	margin-left: auto;
+	padding-right: 4px;
+	line-height: 20px;
+}
+
+.tooltip {
+	background-color: rgb(255, 255, 213);
+	border: 1px solid rgb(170, 170, 170);
+	padding: 2px 6px;
+	white-space: nowrap;
+}
+
+.field {
+	height: 20px;
+	border: 1px solid rgb(170, 170, 170);
+	padding: 1px 4px;
+}
+
+textarea.field {
+	background-color: rgb(255, 255, 213);
+	height: 100%;
+	display: table-cell;
+	padding: 4px 4px;
+}
+
+.number {
+	text-align: right;
+}
+
+.control-active {
+	outline: 3px auto rgb(51, 153, 255);
+}
+
+/*
+* ------------- BUTTONS --------------
+*/
+.buttons-top, .buttons-bottom {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+}
+
+.buttons-top {
+	margin: 0px 0px 6px;
+}
+
+.buttons-bottom {
+	margin: 6px 0px 0px;
+}
+
+.buttons-left {
+	display: flex;
+	align-items: center;
+}
+
+.buttons-right {
+	display: flex;
+	align-items: center;
+}
+
+.button {
+	border: 1px solid rgb(255, 255, 255);
+	border-radius: 3px;
+}
+
+.button.button-image {
+	height: 22px;
+	width: 22px;
+	margin: 1px;
+	padding: 1px;
+	text-align: center;
+}
+
+.button.button-text {
+	height: 22px;
+	margin: 0.5px 1px;
+	padding: 1px 4px;
+}
+
+.button.button-list {
+	width: calc(100% - 1px);
+	margin: 0.5px;
+	border-radius: 0px;
+	padding: 1px 4px;
+	text-align: left;
+}
+
+.button.button-tree {
+	margin: 0.5px;
+	padding: 1px 4px;
+	text-align: left;
+}
+
+.button:hover {
+	border-color: rgb(170, 170, 170);
+}
+
+.button.button-image.button-active, .button.button-image.button-active:hover, .button.button-text.button-active, .button.button-text.button-active:hover {
+	outline: 3px auto rgb(51, 153, 255);
+	border-color: rgb(51, 153, 255);
+}
+
+.button.button-text.button-inactive {
+	/* border-color: rgb(170, 170, 170); */
+	background-color: rgb(241, 241, 241);
+	border-color: rgb(170, 170, 170);
+}
+
+.button.button-list.button-active, .button.button-list.button-active:hover, .button.button-tree.button-active, .button.button-tree.button-active:hover {
+	background-color: rgb(51, 153, 255);
+	border-color: rgb(51, 153, 255);
+	color: white;
+}
+
+.button.button-list.button-inactive, .button.button-tree.button-inactive {
+	background-color: rgb(241, 241, 241);
+	border-color: rgb(170, 170, 170);
+}
+
+.button.button:active, .button.button-pressed {
+	box-shadow: -0.25px -0.25px 0px 1.0px rgb(212, 212, 212);
+}
+
+.button-expcol {
+	display: flex;
+	justify-content: center;
+	margin-right: 2px;
+}
+
+/*
+* ------------- TABLE --------------
+*/
+.table {
+	border: 1px solid rgb(170, 170, 170);
+	display: flex;
+	flex-direction: column;
+	line-height: 1.5;
+}
+
+.table-row-active {
+	
+}
+
+.table-row-inactive {
+	
+}
+
+.table-cell {
+	flex: 1 1 100%;
+	padding: 0px 4px;
+	margin-top: -1px;
+	margin-left: -1px;
+	border: 1px solid rgb(170, 170, 170);
+}
+
+.table-row-handle {
+	flex: 0 0 25px;
+	outline: none;
+	text-align: center;
+}
+
+.table-header {
+	text-align: center;
+}
+
+.table-footer {
+	margin-top: 1px;
+	font-weight: bold;
+	line-height: 1.7;
+}
+
+.table-header, .table-footer {
+	flex: 0 0 100%;
+}
+
+.warning {
+	color: red;
+}
+
+.table-row-active div.table-cell {
+	background-color: rgb(51, 153, 255);
+	color: white;
+}
+
+.table-row-active div.warning {
+	color: #c70000;
+}
+
+.table-row-inactive div.table-cell {
+	background-color: rgb(233, 233, 233);
+}
+
+.table-row-inactive div.warning {
+	color: red;
+}
+
+.table-cell-selected {
+	border-color: rgb(51, 153, 255);
+}
+
+div.table-cell-selected {
+	background-color: rgb(236, 243, 255);
+}
+
+input.table-cell-selected {
+	background-color: rgb(255, 255, 213);
+}
+
+/*
+* ------------- WINDOW --------------
+*/
+.window {
+	background-color: white;
+	border: 1px solid;
+	border-color: #555;
+	border-radius: 3px;
+	box-shadow: 2px 2px 8px 2px #bbb;
+}
+
+.window-handle {
+	background-color: rgb(241, 241, 241);
+	padding: 2px 10px 2px 6px;
+}
+
+.window-handle-title {
+	
+}
+
+.window-handle-selected {
+	background-color: white;
+}
+
+.window-body {
+	background-color: #fff;
+	padding: 6px;
+}
+
+.window-content {
+	min-width: 200px;
+	border: 1px solid rgb(170, 170, 170);
+	border-radius: 6px;
+	padding: 6px;
+}
+
+/*
+* ------------- TABS --------------
+*/
+.tabs {
+	height: 100%;
+}
+
+.tab {
+	
+}
+
+.tab-handle {
+	background-color: rgb(241, 241, 241);
+	height: 28px;
+	width: 120px;
+	border: 1px solid rgb(170, 170, 170);
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+	padding: 0px 10px 2px 6px;
+}
+
+.tab-handle-title {
+	
+}
+
+.tab-handle-selected {
+	background-color: white;
+	border-bottom-color: white;
+}
+
+.tab-body {
+	background-color: #fff;
+	border: 1px solid rgb(170, 170, 170);
+	border-top-right-radius: 6px;
+	border-bottom-right-radius: 6px;
+	border-bottom-left-radius: 6px;
+	padding: 6px;
+}
+
+.tab-content {
+	border: 1px solid rgb(170, 170, 170);
+	border-radius: 6px;
+	padding: 6px 10px;
+}
