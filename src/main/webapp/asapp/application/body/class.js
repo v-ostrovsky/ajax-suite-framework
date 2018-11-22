@@ -26,17 +26,17 @@ define([ 'as', './frmLogin/builder' ], function(as, frmLoginBuilder) {
 		return this;
 	}
 
-	Application.prototype.errorMessage = function(response) {
+	Application.prototype.errorMessage = function(status, response) {
 		var windowContentBuilder = function(context) {
 			var properties = {
 				onSubmit : function(windowContent) {
 					windowContent.send('execute', 'destroy');
-					if (response.status === 401) {
+					if (status === 401) {
 						location.reload();
 					}
 				},
-				header : as.locale.error[response.status].header,
-				message : as.locale.error[response.status][response.code || '00']
+				header : as.locale.error[status].header,
+				message : as.locale.error[status][response.code || '00']
 			};
 
 			return as.uio.frmConfirmBuilder(context, '*/content', properties);

@@ -1,0 +1,4 @@
+<div id="adminPanel" class="group" style="display: flex; flex-direction: column;">
+	<button class="button button-list" tabindex=1 name="users"></button>
+	<button class="button button-list" tabindex=2 name="dumpDb"></button>
+</div>

@@ -79,9 +79,13 @@ define([], function() {
 
 	Pendent.prototype._sendRequest = function() {}
 
+	Pendent.prototype._postProcessor = function(response) {
+		return response;
+	}
+
 	Pendent.prototype._oncomplete = function(status, response) {
 		this.status = status;
-		this._response_ = response;
+		this._response_ = this._postProcessor(response);
 		this._resolve_();
 	}
 
@@ -102,6 +106,10 @@ define([], function() {
 		Pendent.call(reopened, requestParams);
 
 		this._setHandler_(function() {
+			if (typeof reopened._requestParams === 'function') {
+				reopened._requestParams = reopened._requestParams(reopened._response_);
+			}
+
 			mixin(reopened, this);
 			reopened._sendRequest();
 		}.bind(this));

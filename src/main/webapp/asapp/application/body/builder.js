@@ -1,4 +1,4 @@
-define([ 'as', './class', 'text!./template.htpl', './content.ROLE_ADMIN/builder' ], function(as, Class, template, contentBuilder) {
+define([ 'as', './class', 'text!./template.htpl', './content/builder' ], function(as, Class, template, contentBuilder) {
 	"use strict";
 
 	function application() {

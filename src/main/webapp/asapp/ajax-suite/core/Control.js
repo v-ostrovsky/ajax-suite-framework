@@ -49,7 +49,7 @@ define([], function() {
 				if ([ 9 ].includes(event.which)) {
 					event.preventDefault();
 					event.stopPropagation();
-					this._on_(this, 'control:tabulate', event);
+					this._on_(this, 'control:tabulate', 1);
 				}
 				if ([ 12 ].includes(event.which)) {
 					event.stopPropagation();
@@ -131,6 +131,10 @@ define([], function() {
 	Control.prototype.setActiveStatus = function(state) {
 		this.isActive = (state === 'active');
 		return this;
+	}
+
+	Control.prototype.getDefaultActiveElement = function() {
+		return null;
 	}
 
 	Control.prototype.onfocus = function(handler) {
@@ -228,10 +232,6 @@ define([], function() {
 		}
 
 		return this;
-	}
-
-	Control.prototype.getDefaultActiveElement = function() {
-		return null;
 	}
 
 	return Control;

@@ -1,6 +1,6 @@
-define([ './application/dir', './button/dir', './buttonFile/dir', './buttonToggle/dir', './control/dir', './entry/dir', './field/dir', './form/dir', './label/dir', './list/dir', './panel/dir', './radio/dir', './select/dir', './selectDropdown/dir', './table/dir', './tableEntry/dir', './tableHandle/dir', './tableHeader/dir', './tableHeaderField/dir', './tableList/dir', './tableListEntry/dir',
-		'./tableListField/dir', './tableListFooter/dir', './tableListHeader/dir', './tableListHeaderField/dir', './tableTreeEntry/dir', './tabs/dir', './tree/dir', './treeBranch/dir' ],
-		function(application, button, buttonFile, buttonToggle, control, entry, field, form, label, list, panel, radio, select, selectDropdown, table, tableEntry, tableHandle, tableHeader, tableHeaderField, tableList, tableListEntry, tableListField, tableListFooter, tableListHeader, tableListHeaderField, tableTreeEntry, tabs, tree, treeBranch) {
+define([ './application/dir', './button/dir', './buttonFile/dir', './buttonToggle/dir', './control/dir', './entry/dir', './field/dir', './form/dir', './label/dir', './list/dir', './panel/dir', './radio/dir', './router/dir', './select/dir', './selectDropdown/dir', './table/dir', './tableEntry/dir', './tableHandle/dir', './tableHeader/dir', './tableHeaderField/dir', './tableList/dir',
+		'./tableListEntry/dir', './tableListField/dir', './tableListFooter/dir', './tableListHeader/dir', './tableListHeaderField/dir', './tableTreeEntry/dir', './tabs/dir', './tree/dir', './treeBranch/dir' ],
+		function(application, button, buttonFile, buttonToggle, control, entry, field, form, label, list, panel, radio, router, select, selectDropdown, table, tableEntry, tableHandle, tableHeader, tableHeaderField, tableList, tableListEntry, tableListField, tableListFooter, tableListHeader, tableListHeaderField, tableTreeEntry, tabs, tree, treeBranch) {
 			"use strict";
 
 			/*
@@ -26,6 +26,7 @@ define([ './application/dir', './button/dir', './buttonFile/dir', './buttonToggl
 				list : list,
 				panel : panel,
 				radio : radio,
+				router : router,
 				select : select,
 				selectDropdown : selectDropdown,
 				table : table,

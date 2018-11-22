@@ -19,7 +19,7 @@ define([ './Control' ], function(Control) {
 			return false;
 		}
 		if ([ 'control:tabulate' ].includes(eventType) && (control.context === this)) {
-			this.nextControl(control, 1);
+			this.nextControl(control, data);
 			return false;
 		}
 		if ([ 'control:changed', 'field:input' ].includes(eventType) && (control.context === this)) {
@@ -42,7 +42,7 @@ define([ './Control' ], function(Control) {
 		}.bind(this)).sort(function(a, b) {
 			var result = (this.controls[a].tabindex - this.controls[b].tabindex);
 			if (!result) {
-				console.error('More than one element with tabindex=' + tabindex + ' was found as a child of', this);
+				console.error('More than one element with tabindex=' + this.controls[a].tabindex + ' was found as a child of', this);
 			}
 			return result;
 		}.bind(this)).map(function(key, index) {
@@ -60,25 +60,34 @@ define([ './Control' ], function(Control) {
 	}
 
 	Panel.prototype.nextControl = function(control, shift) {
-		var next = function(control) {
-			var index = control.itemId + shift;
-			if ((shift === 1) && (index > this.tabLoop.length - 1)) {
-				index = 0;
+		var next = function(control, shift) {
+			var index;
+			if (shift === 1) {
+				index = control ? control.itemId + shift : 0;
+				index = (index > this.tabLoop.length - 1) ? null : index;
 			}
-			if ((shift === -1) && (index < 0)) {
-				index = this.tabLoop.length - 1;
+			if (shift === -1) {
+				index = control ? control.itemId + shift : this.tabLoop.length - 1;
+				index = (index < 0) ? null : index;
 			}
 
-			return this.tabLoop[index];
+			if (index === null) {
+				this.send('control:tabulate', shift);
+				return null;
+			} else {
+				var nextControl = this.tabLoop[index].focus();
+				if (typeof nextControl.nextControl === 'function') {
+					nextControl.nextControl(null, shift);
+					return null;
+				} else {
+					return nextControl;
+				}
+			}
 		}.bind(this);
 
-		if ((this.tabLoop.length > 1) && (this.tabLoop.includes(control))) {
-			var nextControl = next(control).focus();
-			while (!nextControl.isActive && (nextControl != control)) {
-				nextControl = next(nextControl).focus();
-			}
-		} else if (typeof this.context.nextControl === 'function') {
-			this.context.nextControl(this, shift);
+		var nextControl = next(control, shift);
+		while (nextControl && !nextControl.isActive && (nextControl != control)) {
+			nextControl = next(nextControl, shift);
 		}
 	}
 

@@ -19,6 +19,7 @@ define([ './Control' ], function(Control) {
 	List.prototype._clearCollection_ = function() {
 		this.collection = [];
 		this.container.empty();
+		delete this.activeElement;
 	}
 
 	List.prototype.on = function(control, eventType, data) {
@@ -85,7 +86,7 @@ define([ './Control' ], function(Control) {
 	}
 
 	List.prototype.sort = function(fields) {
-		this.sortFields = fields.concat(this.sortFields.filter(function(item) {
+		this.sortFields = (fields || []).concat((this.sortFields || []).filter(function(item) {
 			return !fields.includes(item);
 		}));
 

@@ -21,13 +21,16 @@ define([ 'rear/XHR' ], function(XHR) {
 	TreeXHR.prototype.constructor = TreeXHR;
 
 	TreeXHR.prototype._postProcessor = function(response) {
-		response = XHR.prototype._postProcessor.call(this, response);
+		var result = response;
 
-		forEach(response, function(item) {
-			return this.parse(item);
-		}.bind(this));
+		if (this.status === 200) {
+			result = JSON.parse(response);
+			forEach(result, function(item) {
+				return this.parse(item);
+			}.bind(this));
+		}
 
-		return response;
+		return result;
 	}
 
 	TreeXHR.prototype.parse = function(attributes) {

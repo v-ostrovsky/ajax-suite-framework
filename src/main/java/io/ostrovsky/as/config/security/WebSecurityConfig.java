@@ -63,8 +63,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/index.html", "/lib/**").permitAll()
 				.antMatchers("/asapp/main.js", "/asapp/as.min.js", "/asapp/ajax-suite/**").permitAll()
 				.regexMatchers("^/asapp/application/((?!ROLE_).)*$").permitAll()
-				// .antMatchers(HttpMethod.GET, "/api/authorities/", "/api/doc/", "/api/content/**").permitAll()
-				.antMatchers(HttpMethod.GET, "/api/authorities/").permitAll()
+				.antMatchers(HttpMethod.GET, "/api/authorities/", "/api/doc/", "/api/content/**").permitAll()
+				// .antMatchers(HttpMethod.GET, "/api/authorities/").permitAll()
 				.anyRequest().hasAuthority("ROLE_ADMIN");
 
 		http.csrf().disable();

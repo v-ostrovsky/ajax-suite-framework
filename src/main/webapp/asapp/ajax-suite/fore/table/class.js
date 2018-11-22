@@ -50,10 +50,13 @@ define([ 'core/Table' ], function(Class) {
 	Table.prototype.select = function() {
 		this.selection.forEach(function(row, rowIndex) {
 			row.forEach(function(item, index) {
+
+				// ---------- fill cells ----------
 				item.element.addClass('table-cell-selected').css({
 					'z-index' : 99
 				});
 
+				// ---------- create selection border ----------
 				var borderColor = item.element.css('border-top-color');
 				var left = 'inset 0.5px 0px 0px 0px ' + borderColor;
 				var right = 'inset -0.5px 0px 0px 0px ' + borderColor;
@@ -77,6 +80,13 @@ define([ 'core/Table' ], function(Class) {
 				item.element.css({
 					'box-shadow' : boxShadow
 				});
+
+				// ---------- enable context menu items ----------
+				item.contextmenuItems.forEach(function(contextmenuItem) {
+					if ([ 'copyTable', 'copyData' ].includes(contextmenuItem.name)) {
+						contextmenuItem.disabled = false;
+					}
+				});
 			}.bind(this));
 
 		}.bind(this));
@@ -89,7 +99,13 @@ define([ 'core/Table' ], function(Class) {
 			row.forEach(function(item, index) {
 				item.element.removeClass('table-cell-selected').css({
 					'z-index' : '',
-					'box-shadow' : 'none'
+					'box-shadow' : ''
+				});
+
+				item.contextmenuItems.forEach(function(contextmenuItem) {
+					if ([ 'copyTable', 'copyData' ].includes(contextmenuItem.name)) {
+						contextmenuItem.disabled = true;
+					}
 				});
 			}.bind(this));
 		}.bind(this));

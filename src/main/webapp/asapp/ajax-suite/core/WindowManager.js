@@ -70,7 +70,7 @@ define([], function() {
 		if (window === this.activeElement) {
 			(window.backdrop) ? window.backdrop.remove() : window.element.remove();
 			this.windows.splice(this.windows.length - 1, 1);
-			(this.windows.length) ? this.windows[this.windows.length - 1].focus() : null;
+			(this.windows.length) ? this.windows[this.windows.length - 1].focus() : this.context.focus();
 		}
 	}
 

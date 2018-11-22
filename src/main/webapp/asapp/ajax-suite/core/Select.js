@@ -94,6 +94,11 @@ define([ './Control' ], function(Control) {
 		return this.content;
 	}
 
+	Select.prototype.expandDown = function() {
+		this.content.expandDown();
+		return this;
+	}
+
 	Select.prototype.getEntry = function() {
 		return this.content.activeElement;
 	}

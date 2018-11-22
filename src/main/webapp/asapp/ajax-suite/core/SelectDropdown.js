@@ -75,7 +75,6 @@ define([ './Control', './Select', './primitives', './Backdrop' ], function(Contr
 			'box-sizing' : 'border-box',
 			'height' : '100%',
 			'width' : '100%',
-			'box-shadow' : 'inherit',
 			'border' : 'inherit',
 			'border-color' : 'rgb(255, 255, 255, 0)',
 			'padding' : 'inherit'
@@ -294,6 +293,11 @@ define([ './Control', './Select', './primitives', './Backdrop' ], function(Contr
 
 	SelectDropdown.prototype.getContent = function() {
 		return this.dropdown.getContent();
+	}
+
+	SelectDropdown.prototype.expandDown = function() {
+		this.dropdown.content.expandDown();
+		return this;
 	}
 
 	SelectDropdown.prototype.getEntry = function() {

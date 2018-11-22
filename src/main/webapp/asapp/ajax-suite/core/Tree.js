@@ -119,6 +119,7 @@ define([ './TreeBranch' ], function(TreeBranch) {
 	}
 
 	Tree.prototype.setContent = function(data) {
+		delete this.activeElement;
 		data.state = 'expanded';
 		this.buildContent(data.node, data.collection, 1);
 

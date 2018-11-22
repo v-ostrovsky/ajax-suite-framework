@@ -1,12 +1,22 @@
 /*
 * ------------- USER AGENT STYLESHEET --------------
 */
+html {
+	height: 100%;
+}
+
 html * {
-	box-sizing: border-box;
+	margin: 0px;
 	border: none;
 	outline: none;
+	box-sizing: border-box;
 	font-family: sans-serif;
 	font-size: 11px;
+}
+
+body {
+	height: 100%;
+	width: 100%;
 }
 
 div {
@@ -21,6 +31,10 @@ button {
 /*
 * ------------- CONTROLS --------------
 */
+.control-active {
+	outline: 3px auto rgb(51, 153, 255);
+}
+
 .group {
 	border: 1px solid rgb(170, 170, 170);
 	border-radius: 6px;
@@ -30,16 +44,25 @@ button {
 	padding-bottom: 6px;
 }
 
+.label {
+	line-height: 20px;
+}
+
 .field-group {
 	display: flex;
 	justify-content: space-between;
 	padding: 3px 0px;
 }
 
-.label {
+.field-group>.label {
 	margin-left: auto;
 	padding-right: 4px;
-	line-height: 20px;
+}
+
+.field-group-vertical {
+	display: flex;
+	flex-direction: column;
+	padding: 3px 0px;
 }
 
 .tooltip {
@@ -55,19 +78,15 @@ button {
 	padding: 1px 4px;
 }
 
+.field.number {
+	text-align: right;
+}
+
 textarea.field {
 	background-color: rgb(255, 255, 213);
 	height: 100%;
 	display: table-cell;
 	padding: 4px 4px;
-}
-
-.number {
-	text-align: right;
-}
-
-.control-active {
-	outline: 3px auto rgb(51, 153, 255);
 }
 
 /*
@@ -134,24 +153,24 @@ textarea.field {
 	border-color: rgb(170, 170, 170);
 }
 
-.button.button-image.button-active, .button.button-image.button-active:hover, .button.button-text.button-active, .button.button-text.button-active:hover {
+.button.button-image.control-active, .button.button-image.control-active:hover, .button.button-text.control-active, .button.button-text.control-active:hover {
 	outline: 3px auto rgb(51, 153, 255);
 	border-color: rgb(51, 153, 255);
 }
 
-.button.button-text.button-inactive {
+.button.button-text.control-inactive {
 	/* border-color: rgb(170, 170, 170); */
 	background-color: rgb(241, 241, 241);
 	border-color: rgb(170, 170, 170);
 }
 
-.button.button-list.button-active, .button.button-list.button-active:hover, .button.button-tree.button-active, .button.button-tree.button-active:hover {
+.button.button-list.control-active, .button.button-list.control-active:hover, .button.button-tree.control-active, .button.button-tree.control-active:hover {
 	background-color: rgb(51, 153, 255);
 	border-color: rgb(51, 153, 255);
 	color: white;
 }
 
-.button.button-list.button-inactive, .button.button-tree.button-inactive {
+.button.button-list.control-inactive, .button.button-tree.control-inactive {
 	background-color: rgb(241, 241, 241);
 	border-color: rgb(170, 170, 170);
 }
@@ -209,7 +228,7 @@ textarea.field {
 }
 
 .table-header, .table-footer {
-	flex: 0 0 100%;
+	flex: 0 0 auto;
 }
 
 .warning {

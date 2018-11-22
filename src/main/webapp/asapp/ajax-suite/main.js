@@ -2,7 +2,7 @@ define([], function() {
 	"use strict";
 
 	require.config({
-		urlArgs : 'bust=v2.0.2',
+		urlArgs : 'bust=vv2.1.7',
 		paths : {
 			'normalize' : 'ajax-suite/lib/require-css/normalize',
 			'css-builder' : 'ajax-suite/lib/require-css/css-builder',

@@ -1,4 +1,0 @@
-<div style="height: 100%; width: 100%; display: flex; flex-direction: column;">
-	<div tabindex=1 name="toolbar"></div>
-	<div class="ck ck-content" style="flex: 0 1 100%; overflow: auto; padding: 0px 18px; user-select: text;" tabindex=2 name="content"></div>
-</div>

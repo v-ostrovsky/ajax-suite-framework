@@ -22,6 +22,12 @@ public class JdbcDataConfig {
 		dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
 		dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
 
+		dataSource.setTestWhileIdle(true);
+		dataSource.setTestOnBorrow(true);
+		dataSource.setValidationQuery("SELECT 1");
+		dataSource.setTimeBetweenEvictionRunsMillis(3600000);
+		dataSource.setMinEvictableIdleTimeMillis(3600000);
+
 		return dataSource;
 	}
 

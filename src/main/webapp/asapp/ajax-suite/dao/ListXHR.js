@@ -11,11 +11,10 @@ define([ 'rear/XHR' ], function(XHR) {
 	ListXHR.prototype.constructor = ListXHR;
 
 	ListXHR.prototype._postProcessor = function(response) {
-		response = XHR.prototype._postProcessor.call(this, response);
+		var result = response;
 
-		var result = [];
-		if (response) {
-			result = response.map(function(item) {
+		if (this.status === 200) {
+			result = JSON.parse(response || []).map(function(item) {
 				return this.parse(item);
 			}.bind(this));
 		}

@@ -65,7 +65,7 @@ define([ './Control' ], function(Control) {
 			section.element.empty().append(wrapper);
 
 			var ruler = $('<div>').appendTo(this.content.element), placeHolderWidth = section.element.innerWidth() - ruler.innerWidth();
-			this.fields[0].element.clone().html('').css({
+			this.header.handle.element.clone().html('').css({
 				'padding' : '0px',
 				'border-right' : 'none',
 				'flex' : '0 0 ' + placeHolderWidth + 'px'
@@ -250,6 +250,10 @@ define([ './Control' ], function(Control) {
 	}
 
 	Table.prototype.on = function(control, eventType, data) {
+		if ([ 'control:focusin' ].includes(eventType)) {
+			this.send(eventType, data).content.focus();
+			return false;
+		}
 		if ([ 'control:tabulate' ].includes(eventType) && (control.context === this)) {
 			this.send(eventType, data);
 			return false;

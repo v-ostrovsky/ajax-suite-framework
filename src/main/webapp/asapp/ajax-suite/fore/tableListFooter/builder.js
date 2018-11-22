@@ -3,10 +3,6 @@ define([ './class', 'i18n!nls/root' ], function(TableListFooter, locale) {
 
 	function tableListFooter(context, name, properties, Class) {
 
-		var handleBuilder = function(context) {
-			return properties.handleBuilder(context).setContextmenu(contextmenuItems);
-		}
-
 		var contextmenuItems = [ 'copyTable', 'copyData' ].map(function(item) {
 			return {
 				name : item,
@@ -18,6 +14,10 @@ define([ './class', 'i18n!nls/root' ], function(TableListFooter, locale) {
 				disabled : true
 			};
 		});
+
+		var handleBuilder = function(context) {
+			return properties.handleBuilder(context).setContextmenu(contextmenuItems);
+		}
 
 		return new (Class || TableListFooter)(context, name, properties.template, handleBuilder).setContent(properties.controls);
 	}

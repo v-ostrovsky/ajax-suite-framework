@@ -2,10 +2,6 @@ define([ './class', 'i18n!nls/root' ], function(TableEntry, locale) {
 	"use strict";
 
 	function entry(context, properties, Class) {
-		
-		var handleBuilder = function(context) {
-			return properties.handleBuilder(context).setContextmenu(cellContextmenuItems);
-		}
 
 		var cellContextmenuItems = [ 'copyTable', 'copyData' ].map(function(item) {
 			return {
@@ -18,6 +14,10 @@ define([ './class', 'i18n!nls/root' ], function(TableEntry, locale) {
 				disabled : true
 			};
 		});
+
+		var handleBuilder = function(context) {
+			return properties.handleBuilder(context).setContextmenu(cellContextmenuItems);
+		}
 
 		return new (Class || TableEntry)(context, properties.template, handleBuilder).setContent(properties.controls).fillContent(properties.attributes).setContextmenu(properties.contextmenuItems);
 	}

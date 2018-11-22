@@ -7,6 +7,10 @@ define([ './Panel' ], function(Panel) {
 	function TableFooter(context, name, template, handleBuilder) {
 		Panel.call(this, context, name, template);
 
+		this.element.css({
+			'box-sizing' : 'content-box'
+		});
+
 		this.handle = handleBuilder(this);
 	}
 	TableFooter.prototype = Object.create(Panel.prototype);

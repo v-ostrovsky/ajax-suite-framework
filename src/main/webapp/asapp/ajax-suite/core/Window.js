@@ -109,6 +109,10 @@ define([ './Control', './primitives' ], function(Control, primitives) {
 			this.send(eventType, data);
 			return false;
 		}
+		if ([ 'control:tabulate' ].includes(eventType)) {
+			control.nextControl(null, data);
+			return false;
+		}
 		if ([ 'handle:mousedown' ].includes(eventType) && (control.context === this)) {
 			this.dragdrop(data);
 			return false;

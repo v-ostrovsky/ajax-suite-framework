@@ -111,7 +111,6 @@ define([ 'core/List' ], function(Class) {
 		this.parameters = parameters;
 
 		this.dao = this.dao[method](this.parameters).execute(function(response) {
-			this.setActiveElement(undefined);
 			this.setContent(response);
 		}.bind(this));
 

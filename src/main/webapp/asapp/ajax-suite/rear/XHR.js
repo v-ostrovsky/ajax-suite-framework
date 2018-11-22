@@ -10,19 +10,6 @@ define([ './rear' ], function(rear) {
 	XHR.prototype = Object.create(rear.Suspended.prototype);
 	XHR.prototype.constructor = XHR;
 
-	XHR.prototype._postProcessor = function(response) {
-		function jsonParse(str) {
-			try {
-				var result = JSON.parse(str);
-			} catch (e) {
-				return str;
-			}
-			return result;
-		}
-
-		return (response) ? jsonParse(response) : null;
-	}
-
 	XHR.prototype._sendRequest = function() {
 		if (typeof this._requestParams === 'string') {
 			this._requestParams = {
@@ -41,7 +28,7 @@ define([ './rear' ], function(rear) {
 			if (response.target) {
 				status = response.target.status;
 				if (status === 200) {
-					rearResponse = this._postProcessor(response.target.response);
+					rearResponse = response.target.response;
 				} else {
 					rearResponse = {
 						status : status,
@@ -62,7 +49,7 @@ define([ './rear' ], function(rear) {
 
 	XHR.prototype.execute = function(onsuccess, onfailure) {
 		function callback(response) {
-			return (this.status === 200) ? onsuccess.call(this, response) : onfailure.call(this, response);
+			return (this.status === 200) ? onsuccess.call(this, response) : onfailure.call(this, this.status, response);
 		};
 
 		return rear.Suspended.prototype.execute.call(this, callback);

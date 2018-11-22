@@ -1,0 +1,56 @@
+/*
+* ------------- CKEDITOR --------------
+*/
+:root {
+	--ck-focus-ring: none;
+}
+
+.ck-content * {
+	text-indent: 20px;
+	font-size: 14px;
+}
+
+.ck-content {
+	width: 100%;
+}
+
+.ck-content p {
+	margin: 2px 0px;
+}
+
+.ck-content h3 {
+	margin: 12px 0px;
+}
+
+.ck-content h4 {
+	font-size: 12px;
+}
+
+.ck-content blockquote {
+	overflow: hidden;
+	margin: 12px 0px 12px 20px;
+	border-left: 5px solid #ccc;
+	padding: 0px 12px;
+}
+
+.ck-content blockquote * {
+	font-style: normal;
+	font-size: 12px;
+	text-indent: 0px;
+}
+
+.ck-content li {
+	text-indent: 0px;
+}
+
+.ck-content .text-big {
+	font-size: 20px;
+}
+
+.ck-content .table table td, .ck-content .table table th {
+	border: 1px solid rgb(170, 170, 170);
+}
+
+.ck-content .table table td {
+	text-align: left;
+}

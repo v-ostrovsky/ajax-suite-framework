@@ -117,7 +117,6 @@ define([ 'core/Tree' ], function(Class) {
 		this.parameters = parameters;
 
 		this.dao = this.dao[method](parameters).execute(function(response) {
-			this.setActiveElement(undefined);
 			this.setContent(response);
 		}.bind(this));
 

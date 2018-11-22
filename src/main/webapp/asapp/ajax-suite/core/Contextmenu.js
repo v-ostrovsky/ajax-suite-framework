@@ -79,7 +79,7 @@ define([ './Backdrop' ], function(Backdrop) {
 	Contextmenu.prototype.show = function(left, top, contextmenuItems) {
 		this.activeElement = $(document.activeElement).keydown(this.onKeydown);
 
-		this.element = this.template.clone(true).appendTo(this.context.element);
+		this.element = this.template.clone(true).appendTo('body');
 
 		this.backdrop = new Backdrop(this, function(initiator, event) {
 			initiator.hide();

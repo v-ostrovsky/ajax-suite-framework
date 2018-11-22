@@ -9,6 +9,10 @@ define([ './primitives' ], function(primitives) {
 	function TableHandle(context, name) {
 		Field.call(this, context, name);
 
+		this.element.css({
+			'box-sizing' : 'content-box'
+		});
+
 		this.element.on({
 			dblclick : function(event) {
 				this.send('handle:dblclick');

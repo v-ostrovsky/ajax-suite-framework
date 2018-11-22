@@ -11,8 +11,8 @@ define([ 'core/primitives' ], function(primitives) {
 	ButtonToggle.prototype.constructor = ButtonToggle;
 
 	ButtonToggle.prototype.setActiveStatus = function(state) {
-		this.element.toggleClass('button-active', [ 'active' ].includes(state));
-		this.element.toggleClass('button-inactive', [ 'inactive' ].includes(state));
+		this.element.toggleClass('control-active', [ 'active' ].includes(state));
+		this.element.toggleClass('control-inactive', [ 'inactive' ].includes(state));
 
 		return primitives.ButtonToggle.prototype.setActiveStatus.call(this, state);
 	}

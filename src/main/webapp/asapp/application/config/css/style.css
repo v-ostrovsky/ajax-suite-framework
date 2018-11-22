@@ -1,17 +1,5 @@
 html * {
-	font-size: 13px;
-}
-
-html {
-	height: 100%;
-}
-
-body {
-	background-color: #eee;
-	height: 100%;
-	width: 100%;
-	box-sizing: border-box;
-	margin: 0px;
+	font-size: 12px;
 }
 
 input {
@@ -32,13 +20,10 @@ input[type="radio"] {
 */
 #application-header {
 	background: url(../images/line-top.png) repeat-x left top;
-	position: fixed;
-	width: 100%;
-	margin-top: 0px;
 }
 
 #topmenu {
-	display: flex;
+	
 }
 
 #topmenu-body {
@@ -50,20 +35,14 @@ input[type="radio"] {
 */
 #application-content {
 	background: url(../images/background.png);
-	display: flex;
-	height: 100%;
-	padding: 35px 4px 4px 4px;
 }
 
 #sidemenu {
-	height: 100%;
-	flex: 1 1 20%;
 	margin-right: 4px;
 }
 
 #sidemenu-content {
 	background-color: #fff;
-	height: 100%;
 	padding: 32px 6px 6px 6px;
 }
 
@@ -73,38 +52,13 @@ input[type="radio"] {
 }
 
 #docsPanel {
-	padding: 2px 6px;
+	padding: 6px;
 }
 
 #mainPanel {
-	flex: 1 1 80%;
-	min-width: 1000px;
+	
 }
 
 #mainPanel-content {
-	background: url(../images/background-logo.png) no-repeat center;
-	height: 100%;
-}
-
-/*
-* ------------- CKEDITOR --------------
-*/
-.ck-content p {
-	margin: 2px 0px;
-	text-indent: 20px;
-	font-size: 14px;
-}
-
-.ck-content h3 {
-	text-indent: 20px;
-	font-size: 14px;
-}
-
-.ck-content .table table th {
-	border: 1px solid rgb(170, 170, 170);
-}
-
-.ck-content .table table td {
-	text-align: left;
-	border: 1px solid rgb(170, 170, 170);
+	background: url(../images/logo-background.png) no-repeat center;
 }

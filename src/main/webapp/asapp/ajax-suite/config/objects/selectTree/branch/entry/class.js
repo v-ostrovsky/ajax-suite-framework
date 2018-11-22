@@ -11,8 +11,8 @@ define([ 'core/Entry' ], function(Entry) {
 	CustomTreeEntry.prototype.constructor = CustomTreeEntry;
 
 	CustomTreeEntry.prototype.setActiveStatus = function(state) {
-		this.controls['textId'].element.toggleClass('button-active', [ 'active' ].includes(state));
-		this.controls['textId'].element.toggleClass('button-inactive', [ 'inactive' ].includes(state));
+		this.controls['textId'].element.toggleClass('control-active', [ 'active' ].includes(state));
+		this.controls['textId'].element.toggleClass('control-inactive', [ 'inactive' ].includes(state));
 
 		return Entry.prototype.setActiveStatus.call(this, state);
 	}

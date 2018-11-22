@@ -9,7 +9,7 @@ define([ './class', 'text!./template.htpl', 'core/primitives' ], function(Entry,
 				builder : function(context) {
 					return new primitives.Button(context, '*/' + item, function(self) {
 						self.context.focus().send('entry:mousedown', attributes.handler);
-					});
+					}).setVisibility(attributes[item]);
 				}
 			};
 		}));
