@@ -17,22 +17,24 @@ define([], function() {
 			'opacity' : '0'
 		}).on({
 			mousedown : function(event) {
-				event.preventDefault();
-				(onMousedown) ? onMousedown(this.initiator, event) : null;
+				if (event.cancelable) {
+					event.preventDefault();
+					(onMousedown) ? onMousedown(this.initiator, event) : null;
 
-				if (event.which === 1) {
-					var element = $(document.elementFromPoint(event.clientX, event.clientY));
+					if (event.which === 1) {
+						var element = $(document.elementFromPoint(event.clientX, event.clientY));
 
-					element.focus().trigger({
-						type : 'mousedown',
-						which : event.which
-					});
+						element.focus().trigger({
+							type : 'mousedown',
+							which : event.which
+						});
 
-					if (!document.activeElement.offsetParent) {
-						while (element[0] && (element[0] != document.activeElement)) {
-							element = element.parent().focus();
-						}
-					};
+						if (!document.activeElement.offsetParent) {
+							while (element[0] && (element[0] !== document.activeElement)) {
+								element = element.parent().focus();
+							}
+						};
+					}
 				}
 			}.bind(this)
 		});

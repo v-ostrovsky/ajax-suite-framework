@@ -1,0 +1,44 @@
+::-webkit-scrollbar {
+	width: 16px;
+}
+
+::-webkit-scrollbar-button {
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+::-webkit-scrollbar-button:horizontal:increment {
+	background-image: url(asapp/app-core/config/css/scrollbar-button-right.png), linear-gradient(rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.03));
+}
+
+::-webkit-scrollbar-button:horizontal:decrement {
+	background-image: url(asapp/app-core/config/css/scrollbar-button-left.png), linear-gradient(rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.03));
+}
+
+::-webkit-scrollbar-button:vertical:increment {
+	background-image: url(asapp/app-core/config/css/scrollbar-button-down.png), linear-gradient(rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.03));
+}
+
+::-webkit-scrollbar-button:vertical:decrement {
+	background-image: url(asapp/app-core/config/css/scrollbar-button-up.png), linear-gradient(rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.03));
+}
+
+::-webkit-scrollbar-corner {
+	background-image: linear-gradient(rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.03));
+}
+
+::-webkit-scrollbar-track {
+	background-image: linear-gradient(rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.03));
+}
+
+::-webkit-scrollbar-thumb {
+	background-image: linear-gradient(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06));
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background-image: linear-gradient(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.12));
+}
+
+:root { 
+}

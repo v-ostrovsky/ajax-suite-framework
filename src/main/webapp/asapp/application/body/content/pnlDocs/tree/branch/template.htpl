@@ -1,9 +1,0 @@
-<div name="branch">
-	<div style="display: flex;" name="node">
-		<div class="button-expcol" style="flex: 0 0 9px;">
-			<button name="expand"></button>
-			<button name="collapse"></button>
-		</div>
-	</div>
-	<div style="padding-left: 20px;" name="collection"></div>
-</div>

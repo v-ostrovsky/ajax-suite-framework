@@ -1,46 +1,42 @@
-define([ './WindowManager', './Contextmenu' ], function(WindowManager, Contextmenu) {
+define(['./CurtainManager', './WindowManager', './Window', './Contextmenu'], function(CurtainManager, WindowManager, Window, Contextmenu) {
 	"use strict";
 
 	/*
 	 * ------------- APPLICATION CLASS --------------
 	 */
 	function Application(template) {
-		this.element = $('<div name="application"></div>').attr({
-			tabindex : 0
-		}).css({
-			height : '100%'
-		}).appendTo('body').append(template);
+		this.element = $(template).appendTo('body');
 
 		this.application = this;
 
-		$('<div name="windows"></div>').appendTo(this.element);
-		this.windowManager = new WindowManager(this);
+		$('<div>').attr({
+			'name': 'curtains'
+		}).appendTo(this.element);
+		this.curtainManager = new CurtainManager(this, 'curtains');
+
+		$('<div>').attr({
+			'name': 'windows'
+		}).appendTo(this.element);
+		this.windowManager = new WindowManager(this, 'windows');
 
 		this.contextmenu = new Contextmenu(this);
 
 		this.element.on({
-			focusin : function(event) {
+			focusin: function(event) {
 				this._on_(this, 'control:focusin', event);
 			}.bind(this)
 		});
 	}
 
 	Application.prototype._on_ = function(control, eventType, data) {
-		if ([ 'control:focusin' ].includes(eventType)) {
-			if (control === this) {
-				this.focus();
-			} else if (control.context === this) {
-				this.setActiveElement(control).focus();
-			}
-		}
-		if ([ 'control:showcontextmenu' ].includes(eventType)) {
+		if (['control:showcontextmenu'].includes(eventType)) {
 			this.contextmenu.show(data.left, data.top, data.contextmenuItems);
 		}
 
 		this.on(control, eventType, data);
 	}
 
-	Application.prototype.on = function(control, eventType, data) {}
+	Application.prototype.on = function(control, eventType, data) { }
 
 	Application.prototype.getDefaultActiveElement = function() {
 		var activeKey = Object.keys(this.controls).find(function(key) {
@@ -51,15 +47,17 @@ define([ './WindowManager', './Contextmenu' ], function(WindowManager, Contextme
 	}
 
 	Application.prototype.setActiveElement = function(control) {
-		Object.keys(this.controls).forEach(function(key) {
-			(this.controls[key] != control) ? this.controls[key].setActiveStatus('none') : null;
-		}.bind(this));
+		(this.activeElement && (this.activeElement !== control)) ? this.activeElement.setActiveStatus('none') : null;
+		(control && !control.isActive) ? control.setActiveStatus('inactive') : null;
 
-		return this.activeElement = control;
+		this.activeElement = (control || null);
+
+		return this.activeElement;
 	}
 
 	Application.prototype.focus = function(element) {
-		var activeElement = element || this.activeElement || this.getDefaultActiveElement();
+		var curtains = this.curtainManager.curtains;
+		var activeElement = element || (curtains.length ? curtains[curtains.length - 1] : this.activeElement) || this.getDefaultActiveElement();
 		if (activeElement) {
 			activeElement.focus();
 		}
@@ -68,10 +66,10 @@ define([ './WindowManager', './Contextmenu' ], function(WindowManager, Contextme
 	}
 
 	Application.prototype.addContent = function(controls) {
-		controls.forEach(function(item) {
+		controls.forEach(function(item, index) {
 			var control = item.builder(this);
 			if (control) {
-				this.controls[item.name] = control;
+				this.controls[item.name] = control.setItemId(this, index);
 			}
 		}.bind(this));
 
@@ -83,8 +81,41 @@ define([ './WindowManager', './Contextmenu' ], function(WindowManager, Contextme
 		return this.addContent(controls);
 	}
 
-	Application.prototype.addWindow = function(windowBuilder, isDialog) {
-		return this.windowManager.addWindow(windowBuilder, isDialog);
+	Application.prototype.addCurtains = function(contentBuilders) {
+		return this.curtainManager.addCurtains(contentBuilders);
+	}
+
+	Application.prototype.addCurtain = function(contentBuilder, animation) {
+		return this.curtainManager.addCurtain(contentBuilder, animation);
+	}
+
+	Application.prototype.removeCurtains = function(curtains) {
+		return this.curtainManager.removeCurtains(curtains);
+	}
+
+	Application.prototype.removeCurtain = function(curtain, animation) {
+		return this.curtainManager.removeCurtain(curtain, animation);
+	}
+
+	Application.prototype.addWindow = function(contentBuilder, isDialog, css) {
+		return this.windowManager.addWindow(contentBuilder, isDialog, css);
+	}
+
+	Application.prototype.showDialog = function(contentBuilder, header, css) {
+		function windowContentBuilder(context, path) {
+			var properties = {
+				onOk: function(windowContent) {
+					windowContent.send('control:destroy');
+				}
+			};
+
+			return contentBuilder(context, path, properties);
+		}
+
+		var asWindow = this.addWindow(windowContentBuilder, true, css);
+		header ? asWindow.setHeader(header) : null;
+
+		return asWindow;
 	}
 
 	return Application;

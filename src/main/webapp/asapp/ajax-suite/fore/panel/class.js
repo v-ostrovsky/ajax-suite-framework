@@ -1,4 +1,4 @@
-define([ 'core/Panel' ], function(Panel) {
+define([ 'ajax-suite/core/Panel' ], function(Panel) {
 	"use strict";
 
 	return Panel;

@@ -1,9 +1,0 @@
-<div id="sidemenu" style="flex: 0 0 25%;">
-	<div id="sidemenu-content" class="group" style="height: 100%; display: flex; flex-direction: column;">
-		<div name="pnlAdmin"></div>
-		<div style="flex: 0 1 100%; display: flex;" name="pnlDocs"></div>
-	</div>
-</div>
-<div id="mainPanel" style="flex: 0 0 75%;">
-	<div id="mainPanel-content" style="height: 100%;" name="mainContent"></div>
-</div>

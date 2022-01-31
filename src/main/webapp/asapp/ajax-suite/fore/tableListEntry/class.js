@@ -1,11 +1,11 @@
-define([ '../tableEntry/class' ], function(Class) {
+define(['../tableEntry/class'], function(Class) {
 	"use strict";
 
 	/*
 	 * ------------- GENEGIC TABLE LIST ENTRY CLASS --------------
 	 */
-	function TableListEntry(context, template, handleBuilder) {
-		Class.call(this, context, template, handleBuilder);
+	function TableListEntry(context, path, template, handleBuilder) {
+		Class.call(this, context, path, template, handleBuilder);
 	}
 	TableListEntry.prototype = Object.create(Class.prototype);
 	TableListEntry.prototype.constructor = TableListEntry;

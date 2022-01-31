@@ -1,0 +1,49 @@
+@keyframes spinner-border { 
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+.spinner {
+	width: 2rem;
+	height: 2rem;
+	border: 0.35em solid var(--as-background-color-active);
+	border-right-color: transparent;
+	border-radius: 50%;
+	animation: spinner-border .75s linear infinite;
+}
+
+.table-row-handle {
+	cursor: url(asapp/app-core/config/css/handle-row.svg) 10 0, auto;
+}
+
+.table-header {
+	cursor: url(asapp/app-core/config/css/handle-col.svg) 0 10, auto;
+}
+
+.table-header * {
+	cursor: inherit;
+}
+
+.table-header .table-row-handle {
+	cursor: url(asapp/app-core/config/css/handle-colrow.svg) 10 10, auto;
+}
+
+.button.button-blockquote {
+	background: white;
+	width: 32px;
+	height: 32px;
+	margin: auto;
+	border: var(--as-border);
+	border-radius: 50%;
+	padding: 11px;
+}
+
+.editor-toolbar {
+	display: flex;
+}
+
+.editor-toolbar>.button {
+	border: var(--as-border);
+	margin-right: 2px;
+}

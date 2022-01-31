@@ -1,54 +1,117 @@
-define([ './Control' ], function(Control) {
+define(['./Control', 'ajax-suite/utils/@dir'], function(Control, utils) {
 	"use strict";
+
+	/*
+	 * ------------- EXPCOL INTERFACE --------------
+	 */
+	function Expcol(context, path, template) {
+		Control.call(this, context, path, template);
+
+		this.setVisibility(false);
+	}
+	Expcol.prototype = Object.create(Control.prototype);
+	Expcol.prototype.constructor = Expcol;
+
+	Expcol.prototype.setHandler = function(handler) {
+		return this;
+	}
+
+	Expcol.prototype.setState = function(state) {
+		return this;
+	}
 
 	/*
 	 * ------------- TREE BRANCH CLASS --------------
 	 */
-	function TreeBranch(context, name, template, container, entryBuilder, branchBuilder) {
-		Control.call(this, context, name, 'create:' + template);
+	function TreeBranch(context, path, template, parameters) {
+		Control.call(this, context, path, 'create:' + template);
 
-		this.collectionName = name;
-		this.template = template;
-		this.container = this.element.find('[name="' + container + '"]');
-		this.entryBuilder = entryBuilder;
-		this.branchBuilder = branchBuilder;
+		this.expcolBuilder = parameters.expcolBuilder || this.context.expcolBuilder || function(context, path) {
+			return new Expcol(context, path, 'create:<div name="expcol"></div>');
+		};
+		this.entryBuilder = parameters.entryBuilder || this.context.entryBuilder;
+		this.branchBuilder = this.context.branchBuilder;
+
+		this.collection = [];
+		this.collectionElement = this.element.children('[name="collection"]');
 	}
 	TreeBranch.prototype = Object.create(Control.prototype);
 	TreeBranch.prototype.constructor = TreeBranch;
 
-	TreeBranch.prototype.setState = function(state) {
-		if (this.collection.length) {
-			this.state = state || 'collapsed';
-
-			if (this.state === 'collapsed' && this.element.has(document.activeElement).length) {
-				this.entry.focus();
-			}
-
-			for ( var key in this.collection) {
-				if (this.state === 'expanded') {
-					this.collection[key].element.show()
-				} else {
-					this.collection[key].element.hide();
-				};
-			}
-		} else {
-			this.state = 'none';
+	TreeBranch.prototype.on = function(control, eventType, data) {
+		if (['control:changed'].includes(eventType) && (control === this.expcol)) {
+			this.setState(['expanded'].includes(this.state) ? 'collapsed' : 'expanded', data);
+			return false;
 		}
+	}
+
+	TreeBranch.prototype.setState = function(state, animation) {
+		if (this.entry) {
+			if (this.collection.length) {
+				this.state = (state && !['none'].includes(state)) ? state : 'collapsed';
+
+				if (this.state === 'collapsed' && this.element.has(document.activeElement).length) {
+					this.entry.focus();
+				}
+
+				if (animation) {
+					var collection = {
+						element: this.collectionElement
+					};
+
+					animation = Object.assign(animation, {
+						expanded: 'showDown',
+						collapsed: 'hideUp'
+					});
+
+					utils.animation[animation[this.state]](collection, animation.onComplete, animation.duration * this.collectionElement.outerHeight(true) / 100);
+				} else {
+					this.collectionElement.toggle(this.state === 'expanded');
+				}
+			} else {
+				this.state = 'none';
+				this.collectionElement.toggle(false);
+			}
+
+			this.expcol.setState(this.state);
+		}
+
+		return this;
 	};
 
-	TreeBranch.prototype.addBranch = function(data, index) {
-		var branch = (this.branchBuilder) ? this.branchBuilder(this) : new this.constructor(this, this.collectionName, this.template, this.container.attr('name'), this.entryBuilder);
-		branch.buildContent(data.node, data.collection, index, data.state);
+	TreeBranch.prototype.clear = function() {
+		if (this.entry) {
+			this.setActiveElement(null);
 
-		return branch;
+			this.entry.element.remove();
+			delete this.entry;
+
+			this.expcol.element.remove();
+			delete this.expcol;
+
+			this.collection.forEach(function(item) {
+				item.element.remove();
+			});
+			this.collection = [];
+		}
+
+		return this;
+	}
+
+	TreeBranch.prototype.addBranch = function(data, itemId) {
+		return this.branchBuilder(this, 'collection').buildContent(data.node, data.collection, itemId, data.state);
 	}
 
 	TreeBranch.prototype.buildContent = function(attributes, collection, itemId, state) {
+		this.clear();
+
 		var root = (this.context instanceof TreeBranch) ? this.context.entry.root : this;
-		this.entry = this.entryBuilder(this, attributes).setItemId(root, itemId);
+
+		this.expcol = this.expcolBuilder(this, 'node');
+
+		this.entry = this.entryBuilder(this, 'node', attributes).setItemId(root, itemId);
 		this.entry.parent = (this.context instanceof TreeBranch) ? this.context.entry : null;
 
-		this.collection = [];
 		collection.forEach(function(item, index) {
 			this.collection[index] = this.addBranch(item, index);
 		}.bind(this));
@@ -60,7 +123,7 @@ define([ './Control' ], function(Control) {
 
 	TreeBranch.prototype.forEach = function(handler) {
 		function forEachSubEntry(branch) {
-			for ( var key in branch.collection) {
+			for (var key in branch.collection) {
 				var result = handler(branch.collection[key].entry) || forEachSubEntry(branch.collection[key]);
 				if (result) {
 					return result;
@@ -77,7 +140,7 @@ define([ './Control' ], function(Control) {
 				return branch;
 			} else {
 				var found = branch.collection.find(function(item) {
-					return (code.search(item.entry.attributes.code) === 0)
+					return (code.indexOf(item.entry.attributes.code) === 0)
 				});
 
 				return (found) ? findChild(found, code) : null;
@@ -148,13 +211,6 @@ define([ './Control' ], function(Control) {
 			states[item.getValue()] = item.context.state;
 		});
 		this.mixStates(data, states);
-
-		this.entry.element.remove();
-		delete this.entry;
-		this.collection.forEach(function(item) {
-			item.element.remove();
-		});
-		this.collection = [];
 
 		return this.buildContent(data.node, data.collection, itemId, data.state);
 	}

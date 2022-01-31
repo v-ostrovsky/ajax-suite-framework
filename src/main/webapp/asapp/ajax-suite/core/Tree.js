@@ -1,68 +1,66 @@
-define([ './TreeBranch' ], function(TreeBranch) {
+define(['ajax-suite/utils/@dir', './TreeBranch'], function(utils, TreeBranch) {
 	"use strict";
-
-	/*
-	 * ------------- TREE DATA CLASS --------------
-	 */
-	function TreeData(data) {
-		this.node = data.node;
-		this.collection = data.collection;
-	}
-
-	TreeData.prototype.find = function(handler) {
-		function find(branch) {
-			if (handler(branch.node)) {
-				return branch.node;
-			} else {
-				for ( var key in branch.collection) {
-					var result = find(branch.collection[key]);
-					if (result) {
-						return result;
-					}
-				}
-			}
-		}
-
-		return find(this);
-	}
 
 	/*
 	 * ------------- TREE CLASS --------------
 	 */
-	function Tree(context, name, template, container, rootEntryBuilder, branchBuilder) {
-		TreeBranch.call(this, context, name, template, container, rootEntryBuilder, branchBuilder);
+	function Tree(context, path, template, parameters) {
+		TreeBranch.call(this, context, path, template, parameters);
+
+		this.element.attr({
+			'tabindex': this.element.attr('tabindex') || 0
+		});
+
+		this.branchBuilder = parameters.branchBuilder;
 	}
 	Tree.prototype = Object.create(TreeBranch.prototype);
 	Tree.prototype.constructor = Tree;
 
 	Tree.prototype.on = function(control, eventType, data) {
-		if ([ 'control:focusin' ].includes(eventType) && (control.root === this)) {
-			(control != this.activeElement) ? this.setActiveElement(control) : null;
+		if (['control:focusin'].includes(eventType) && (control.root === this)) {
 			this.send(eventType, data).activeElement.focus();
 			return false;
 		}
-		if ([ 'control:tabulate' ].includes(eventType)) {
+		if (['control:tabulate'].includes(eventType)) {
 			this.send(eventType, data);
 			return false;
 		}
-		if ([ 'control:into' ].includes(eventType) && (control.root === this)) {
+		if (['control:into'].includes(eventType) && (control.root === this)) {
 			control.context.setState(((control.context.state === 'expanded')) ? 'collapsed' : 'expanded');
 			return false;
 		}
-		if ([ 'control:updown' ].includes(eventType) && (control.root === this)) {
+		if (['control:updown'].includes(eventType) && (control.root === this)) {
 			if (!data.shiftKey) {
+				var next = function(entry, updown, itemId) {
+					var nextEntry = this.nextEntry(entry, updown);
+					var activeControl = (itemId !== undefined && nextEntry.tabLoop[itemId].isVisible()) ? nextEntry.tabLoop[itemId] : nextEntry.getDefaultActiveElement();
+					nextEntry.focus(activeControl);
+					if (!nextEntry.element.has(document.activeElement).length) {
+						next(nextEntry, updown, itemId);
+					}
+				}.bind(this);
+
 				var updown = (data.which === 38) ? -1 : 1;
-				var nextEntry = nextEntry = this.nextEntry(control, updown);
 				var itemId = (control.activeElement) ? control.activeElement.itemId : null;
-				var activeControl = (itemId != undefined && nextEntry.tabLoop[itemId].isVisible()) ? nextEntry.tabLoop[itemId] : nextEntry.getDefaultActiveElement();
-				nextEntry.focus(activeControl);
+				next(control, updown, itemId);
 				return false;
 			}
 		}
-		if ([ 'branch:collapse' ].includes(eventType)) {
+		if (['branch:collapse'].includes(eventType)) {
 			(this.activeElement && control.context.getEntry(this.activeElement.attributes.code)) ? control.focus() : null;
 			return false;
 		}
+
+		return TreeBranch.prototype.on.call(this, control, eventType, data);
+	}
+
+	Tree.prototype.setActiveElement = function(control) {
+		var activeElement = TreeBranch.prototype.setActiveElement.call(this, control);
+
+		(activeElement && !activeElement.isVisible()) ? activeElement.context.expandUp() : null;
+		this.send('control:changed');
+
+		return activeElement;
 	}
 
 	Tree.prototype.firstEntry = function() {
@@ -104,65 +102,41 @@ define([ './TreeBranch' ], function(TreeBranch) {
 		return (updown === 1) ? next(entry) : previous(entry);
 	}
 
-	Tree.prototype.getDefaultActiveElement = function() {
-		return this.entry;
-	}
-
-	Tree.prototype.setActiveElement = function(entry) {
-		(this.activeElement && (this.activeElement != entry)) ? this.activeElement.setActiveStatus('none') : null;
-		(entry && !entry.isActive) ? entry.setActiveStatus('inactive') : null;
-
-		this.activeElement = entry;
-		this.send('control:changed');
-
-		return this.activeElement;
-	}
-
-	Tree.prototype.setContent = function(data) {
-		delete this.activeElement;
-		data.state = 'expanded';
-		this.buildContent(data.node, data.collection, 1);
-
-		return this.send('content:set');
-	}
-
-	Tree.prototype.create = function(data) {
-		var parentBranch = this.getEntry(data.node.code).context.refresh(data);
-		parentBranch.setState('expanded');
-		parentBranch.collection[parentBranch.collection.length - 1].entry.focus();
-		this.send('content:create');
-	}
-
-	Tree.prototype.edit = function(data) {
-		var entry = this.getEntry(data.node.code).fillContent(data.node);
-		this.send('content:edit');
-	}
-
-	Tree.prototype.moveBranch = function(data, entryId) {
-		var parentBranch = this.getEntry(data.node.code).context.refresh(data);
-		var entry = this.getEntryById(entryId);
-		entry.context.expandUp();
-		entry.focus();
-		this.send('content:moveBranch');
-	}
-
-	Tree.prototype.removeBranch = function(data) {
-		var parentBranch = this.getEntry(data.node.code).context.refresh(data);
-		parentBranch.entry.focus();
-		this.send('content:removeBranch');
+	Tree.prototype.setContent = function(data, state) {
+		this.buildContent(data.node, data.collection, 1, state);
+		this.send('control:refresh');
+		return this;
 	}
 
 	Tree.prototype.getData = function() {
 		function map(branch) {
-			return new TreeData({
-				node : branch.entry.attributes,
-				collection : branch.collection.map(function(item) {
+			return {
+				node: branch.entry.attributes,
+				collection: branch.collection.map(function(item) {
 					return map(item);
 				})
-			});
+			};
 		}
 
-		return map(this);
+		return utils.parseTree(map(this));
+	}
+
+	Tree.prototype.getFullData = function() {
+		function map(branch) {
+			var values = Object.keys(branch.entry.controls).reduce(function(result, key) {
+				result[key] = branch.entry.controls[key].getValue();
+				return result
+			}, {});
+
+			return {
+				node: Object.assign({}, branch.entry.attributes, values),
+				collection: branch.collection.map(function(item) {
+					return map(item);
+				})
+			};
+		}
+
+		return utils.parseTree(map(this));
 	}
 
 	Tree.prototype.setValue = function(value) {

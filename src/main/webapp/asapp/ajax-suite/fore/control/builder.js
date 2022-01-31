@@ -1,8 +1,11 @@
 define([ './class' ], function(Control) {
 	"use strict";
 
-	function control(context, name, properties, Class) {
-		return new (Class || Control)(context, name, properties.template);
+	function control(context, path, properties, Class) {
+		var control = new (Class || Control)(context, path, properties.template);
+		(properties.visible !== undefined) ? control.setVisibility(properties.visible) : null;
+
+		return control;
 	}
 
 	return control;

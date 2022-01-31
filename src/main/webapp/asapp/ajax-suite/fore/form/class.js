@@ -1,4 +1,4 @@
-define([ 'core/Form' ], function(Form) {
+define([ 'ajax-suite/core/Form' ], function(Form) {
 	"use strict";
 
 	return Form;

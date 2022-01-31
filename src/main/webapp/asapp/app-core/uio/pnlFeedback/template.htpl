@@ -1,0 +1,21 @@
+<div style="width: 280px; flex: 1; display: flex; flex-direction: column; margin-top: 6px;">
+	<div style="overflow-y: auto; padding: 0 6px;" tabindex=0 name="list"></div>
+	<div class="group" style="margin-top: 12px; padding: 6px;">
+		<div class="buttons-top" style="margin-bottom: 6px; align-items: flex-end;">
+			<div class="buttons-group">
+				<div class="editor-toolbar" name="editorToolbar"></div>
+			</div>
+			<div class="buttons-group editor-toolbar">
+				<div style="text-align: right; color: grey; font-size: 0.7em;" name="reCAPTCHA">
+					This site is protected by reCAPTCHA<br>and the Google <a href="https://policies.google.com/privacy">Privacy Policy</a> and <a href="https://policies.google.com/terms">Terms of Service</a> apply.
+				</div>
+				<div style="margin-right: 2px;" tabindex=2 name="lstSubscription"></div>
+				<div class="button button-image" style="margin-right: 0;" tabindex=4 name="addMessages"></div>
+			</div>
+		</div>
+		<div style="display: flex; align-items: flex-end; position: relative">
+			<div class="group cck-editor-message" style="flex: 1; padding: 2px;" tabindex=1 name="editor"></div>
+			<div class="button button-image" style="position: absolute; right: 0; bottom: 0; margin: 8px 4px;" name="create"></div>
+		</div>
+	</div>
+</div>

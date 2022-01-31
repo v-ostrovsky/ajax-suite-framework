@@ -1,0 +1,4 @@
+<div class="selector" style="padding: 2px;">
+	<div style="display: flex;" name="node"></div>
+	<div style="padding-left: 4px;" name="collection"></div>
+</div>

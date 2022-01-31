@@ -1,24 +1,33 @@
-define([ 'core/TableEntry' ], function(Class) {
+define(['ajax-suite/core/TableEntry'], function(Class) {
 	"use strict";
 
 	/*
 	 * ------------- GENEGIC TABLE ENTRY CLASS --------------
 	 */
-	function TableEntry(context, template, handleBuilder) {
-		Class.call(this, context, template, handleBuilder);
+	function TableEntry(context, path, template, handleBuilder) {
+		Class.call(this, context, path, template, handleBuilder);
 	}
 	TableEntry.prototype = Object.create(Class.prototype);
 	TableEntry.prototype.constructor = TableEntry;
 
-	TableEntry.prototype.setActiveStatus = function(state) {
-		this.element.toggleClass('table-row-active', [ 'active' ].includes(state));
-		this.element.toggleClass('table-row-inactive', [ 'inactive' ].includes(state));
+	TableEntry.prototype.setSelectedStatus = function(fields, flag) {
+		if (['handle'].includes(fields[0].name)) {
+			this.contextmenuItems.forEach(function(menuItem) {
+				(typeof menuItem.onSetSelectedStatus === 'function') ? menuItem.onSetSelectedStatus(menuItem, flag) : null;
+			});
+		}
 
-		this.contextmenuItems.forEach(function(menuItem) {
-			menuItem.disabled = ![ 'active', 'inactive' ].includes(state);
-		});
+		fields.forEach(function(field) {
+			var item = ['handle'].includes(field.name) ? this.handle : this.controls[field.name];
 
-		return Class.prototype.setActiveStatus.call(this, state);
+			item.element.toggleClass('selected', flag);
+
+			item.contextmenuItems.forEach(function(menuItem) {
+				(typeof menuItem.onSetSelectedStatus === 'function') ? menuItem.onSetSelectedStatus(menuItem, flag) : null;
+			});
+		}.bind(this));
+
+		return this;
 	}
 
 	return TableEntry;

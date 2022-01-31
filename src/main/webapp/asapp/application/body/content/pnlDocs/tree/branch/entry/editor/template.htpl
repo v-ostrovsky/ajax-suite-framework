@@ -1,4 +1,0 @@
-<div style="height: 100%; width: 100%; display: flex; flex-direction: column;">
-	<div tabindex=1 name="toolbar"></div>
-	<div style="flex: 0 1 100%; display: flex;" tabindex=2 name="content"></div>
-</div>

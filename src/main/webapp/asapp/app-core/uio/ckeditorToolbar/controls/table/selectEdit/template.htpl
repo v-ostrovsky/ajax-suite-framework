@@ -1,0 +1,4 @@
+<div style="height: 100%; overflow-y: auto; padding: 4px;">
+	<div style="display: flex;" name="node"></div>
+	<div style="padding-left: 0px;" name="collection"></div>
+</div>

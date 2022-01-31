@@ -1,4 +1,4 @@
-define([ './Control' ], function(Control) {
+define(['./Control', './Tab', 'ajax-suite/utils/@dir'], function(Control, Tab, utils) {
 	"use strict";
 
 	/*
@@ -7,49 +7,40 @@ define([ './Control' ], function(Control) {
 	function Handle(context) {
 		this.context = context;
 
-		this.element = $('<div>').attr({
-			'name' : 'handle'
-		}).css({
-			'display' : 'flex',
-			'justify-content' : 'flex-start'
+		this.element = $('<div>').css({
+			'position': 'relative',
+			'display': 'flex',
+			'justify-content': 'flex-start'
+		}).attr({
+			'name': 'handle'
 		}).appendTo(this.context.element);
-	}
-
-	Handle.prototype.addTabProxy = function(tab) {
-		tab.handle.element.on({
-			mousedown : function(event) {
-				event.preventDefault();
-				event.stopPropagation();
-				tab.send('handle:mousedown', event);
-			}.bind(this)
-		}).appendTo(this.element);
 	}
 
 	/*
 	 * ------------- BODY CLASS --------------
 	 */
 	function Body(context) {
-		this.element = $('<div>').attr({
-			'name' : 'body'
-		}).css({
-			'flex' : '1 1 100%',
-			'display' : 'flex'
+		this.element = $('<div>').css({
+			'height': '0%',
+			'flex': '1'
+		}).attr({
+			'name': 'body'
 		}).appendTo(context.element);
 	}
 
 	/*
 	 * ------------- TABS CLASS --------------
 	 */
-	function Tabs(context, name) {
-		Control.call(this, context, name);
+	function Tabs(context, path) {
+		Control.call(this, context, path);
 
 		this.element.css({
-			'display' : 'flex',
-			'flex-direction' : 'column-reverse'
+			'display': 'flex',
+			'flex-direction': 'column'
 		});
 
-		this.body = new Body(this);
 		this.handle = new Handle(this);
+		this.body = new Body(this);
 
 		this.tabs = [];
 	}
@@ -57,77 +48,81 @@ define([ './Control' ], function(Control) {
 	Tabs.prototype.constructor = Tabs;
 
 	Tabs.prototype.on = function(control, eventType, data) {
-		if ([ 'control:focusin' ].includes(eventType) && (control.root === this)) {
-			this.send(eventType, data);
+		if (['control:focusin'].includes(eventType) && (control.root === this)) {
+			this.send(eventType, data).activeElement.focus();
 			return false;
 		}
-		if ([ 'handle:mousedown' ].includes(eventType) && (control.root === this)) {
-			this.setActiveElement(control).focus();
+		if (['control:destroy'].includes(eventType) && (control.root === this)) {
+			this.removeTab(control);
 			this.send('config:changed');
 			return false;
 		}
-		if ([ 'tab:destroy' ].includes(eventType) && (control.root === this)) {
-			this.removeTabs([ control ]);
-			if (control === this.activeElement) {
-				if (this.tabs.length) {
-					this.setActiveElement(this.tabs[this.tabs.length - 1]).focus();
-				} else {
-					delete this.activeElement;
-				}
-			}
+		if (['handle:mousedown'].includes(eventType) && (control.root === this)) {
+			this.setActiveElement(control).focus();
 			this.send('config:changed');
 			return false;
 		}
 	}
 
 	Tabs.prototype.setActiveElement = function(tab) {
-		(this.activeElement && (this.activeElement != tab)) ? this.activeElement.setActiveStatus('none') : null;
+		if (this.tabs.includes(tab)) {
+			this.tabs.forEach(function(item, i) {
+				item.setVisibility(item === tab);
+			}.bind(this));
 
-		this.tabs.forEach(function(item, i) {
-			item.setVisibility(false);
-		}.bind(this));
-		tab.setVisibility(true);
-
-		(tab && !tab.isActive) ? tab.setActiveStatus('inactive') : null;
-
-		return this.activeElement = tab;
+			return Control.prototype.setActiveElement.call(this, tab);
+		} else {
+			return null;
+		}
 	}
 
-	Tabs.prototype.addTabs = function(tabBuilders) {
-		return tabBuilders.map(function(item) {
-			var tab = item(this).setItemId(this, this.tabs.length).setVisibility(false);
-			this.handle.addTabProxy(tab);
-			this.tabs.push(tab);
-			return tab;
-		}.bind(this));
+	Tabs.prototype.addTab = function(contentBuilder) {
+		var tabBuilder = function(context) {
+			return new Tab(context).setContent(contentBuilder);
+		};
+
+		var tab = tabBuilder(this).setItemId(this, this.tabs.length);
+
+		tab.handle.element.appendTo(this.handle.element);
+		this.tabs.push(tab);
+
+		return tab.focus();
 	}
 
-	Tabs.prototype.removeTabs = function(tabs) {
-		if (tabs.length) {
-			tabs.forEach(function(item) {
-				item.handle.element.remove();
-				item.element.remove();
-			});
-
+	Tabs.prototype.removeTab = function(tab) {
+		if (this.tabs.includes(tab)) {
 			this.tabs = this.tabs.filter(function(item) {
-				return !tabs.includes(item);
+				return (item !== tab);
 			});
+
+			if (typeof tab.content.onContainerDestroy === 'function') {
+				tab.content.onContainerDestroy();
+			}
+
+			tab.handle.element.remove();
+			tab.element.remove();
+
+			if (tab === this.activeElement) {
+				this.tabs.length ? this.setActiveElement(this.tabs[this.tabs.length - 1]).focus() : this.context.focus();
+			}
 		}
 
 		return this.activeElement;
 	}
 
-	Tabs.prototype.getTabByRoute = function(route) {
-		return this.tabs.find(function(item) {
-			return (item.route === route);
-		});
-	}
-
 	Tabs.prototype.getConfig = function() {
-		return this.tabs.reduce(function(accumulator, item) {
+		var config = utils.config();
+
+		config.routes = this.tabs.reduce(function(accumulator, item) {
 			(item.route) ? accumulator.push(item.route) : null;
 			return accumulator;
 		}, []);
+
+		if (config.routes.length) {
+			config.setActiveRoute(this.activeElement.route);
+		}
+
+		return config;
 	}
 
 	return Tabs;

@@ -1,0 +1,181 @@
+/*
+* ------------- FONTS --------------
+*/
+@font-face {
+	font-family: "Jura";
+	src: url(asapp/app-core/config/css/fonts/Jura-VariableFont_wght.ttf) format("truetype");
+}
+
+@font-face {
+	font-family: "Lobster";
+	src: url(asapp/app-core/config/css/fonts/Lobster-Regular.ttf) format("truetype");
+}
+
+@font-face {
+	font-family: "MontserratAlternates";
+	src: url(asapp/app-core/config/css/fonts/MontserratAlternates-Regular.ttf) format("truetype");
+}
+
+@font-face {
+	font-family: "Oswald";
+	src: url(asapp/app-core/config/css/fonts/Oswald-VariableFont_wght.ttf) format("truetype");
+}
+
+@font-face {
+	font-family: "Pacifico";
+	src: url(asapp/app-core/config/css/fonts/Pacifico-Regular.ttf) format("truetype");
+}
+
+@font-face {
+	font-family: "Play";
+	src: url(asapp/app-core/config/css/fonts/Play-Regular.ttf) format("truetype");
+}
+
+@font-face {
+	font-family: "PoiretOne";
+	src: url(asapp/app-core/config/css/fonts/PoiretOne-Regular.ttf) format("truetype");
+}
+
+@font-face {
+	font-family: "PTSansNarrow";
+	src: url(asapp/app-core/config/css/fonts/PTSansNarrow-Regular.ttf) format("truetype");
+}
+
+@font-face {
+	font-family: "Roboto";
+	src: url(asapp/app-core/config/css/fonts/Roboto-Regular.ttf) format("truetype");
+}
+
+@font-face {
+	font-family: "RobotoCondensed";
+	src: url(asapp/app-core/config/css/fonts/RobotoCondensed-Regular.ttf) format("truetype");
+}
+
+@font-face {
+	font-family: "RussoOne";
+	src: url(asapp/app-core/config/css/fonts/RussoOne-Regular.ttf) format("truetype");
+}
+
+/*
+* ------------- CKEDITOR --------------
+*/
+:root {
+	--ck-focus-ring: 1px solid rgb(51, 153, 255); 
+	--ck-inner-shadow: inset 0px 0px 0px 0.5px rgb(51, 153, 255); 
+	--ck-spacing-unit: 6px; 	
+	--ck-spacing-extra-tiny: calc(var(--ck-spacing-unit)*0.16);
+	--ck-spacing-tiny: calc(var(--ck-spacing-unit)*0.3); 
+	--ck-spacing-small: calc(var(--ck-spacing-unit)*0.5); 
+	--ck-spacing-standart: var(--ck-spacing-unit); 
+	--ck-spacing-large: calc(var(--ck-spacing-unit)*2.0);
+	--ck-spacing-huge: calc(var(--ck-spacing-unit)*3.0);  	
+}
+
+.cck-editor-message .ck.ck-content {
+	height: auto;
+	padding: 10px;
+}
+
+.cck-editor-message .ck.ck-content>:first-child {
+	margin-top: 0;
+}
+
+.cck-editor-message .ck.ck-content>:last-child {
+	margin-bottom: 0;
+}
+
+.cck-editor-message .ck.ck-content.ck-editor__editable {
+	padding-right: 36px;
+}
+
+.cck-text-entry {
+	background-color: white;
+	margin-right: 6px;
+	margin-bottom: 6px;
+	border: 1px solid rgb(170, 170, 170);
+	border-radius: var(--as-border-radius-standard);
+	padding: 6px;
+}
+
+.cck-text-entry-active {
+	background-color: var(--as-background-color-selected);
+	border-color: var(--as-border-color-active) !important;
+	box-shadow: var(--as-outline-color-active);
+}
+
+.cck-text-entry-inactive {
+	background-color: transparent;
+	background-image: linear-gradient(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06));
+}
+
+.ck * {
+	line-height: 1.4;
+}
+
+.ck.ck-editor__top {
+	display: none;
+}
+
+.ck.ck-editor__main {
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+.ck.ck-editor__editable {
+	border: none;
+}
+
+.ck.ck-editor__editable:not(.ck-editor__nested-editable).ck-focused {
+	border: none;
+    box-shadow: none;
+}
+
+.ck.ck-editor__editable_inline > *:first-child {
+    margin-top: 0;
+}
+
+.ck.ck-editor__editable_inline > *:last-child {
+    margin-bottom: 0;
+}
+
+.ck.ck-content {
+	height: 100%;
+	padding: 6px 10px;
+	user-select: text;
+}
+
+.ck.ck-content p {
+	text-indent: 20px;
+}
+
+.ck.ck-content ul {
+	padding-inline-start: 20px;
+}
+
+.ck.ck-content li {
+	padding-top: 10px;
+	list-style-position: inside;
+	text-indent: 10px;
+}
+
+.ck.ck-content blockquote {
+	overflow: inherit;
+    padding: 0;
+    font-style: inherit;
+    border: none;
+}
+
+.ck.ck-content .image {
+	min-width: 0;
+}
+
+.ck.ck-reset  {
+	width: 100%;
+	height: 100%;
+}
+
+.ck.ck-reset .ck.ck-content blockquote {
+	outline: 4px solid #eee;
+	background: #eee;
+}

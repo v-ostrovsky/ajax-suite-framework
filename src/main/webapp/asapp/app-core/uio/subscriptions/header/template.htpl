@@ -1,0 +1,5 @@
+<div style="display: flex;" name="entry">
+	<div class="table-cell" style="text-align: left; cursor: default;" name="textId"></div>
+	<div class="table-cell" style="cursor: default; flex: 0 0 32px; display: flex;" name="chrome"></div>
+	<div class="table-cell" style="cursor: default; flex: 0 0 32px; display: flex;" name="telegram"></div>
+</div>

@@ -1,57 +1,33 @@
-define([ './Control' ], function(Control) {
+define(['./Control'], function(Control) {
 	"use strict";
 
 	/*
 	 * ------------- LIST CLASS --------------
 	 */
-	function List(context, name, template, container, entryBuilder) {
-		Control.call(this, context, name, template);
+	function List(context, path, template, parameters) {
+		Control.call(this, context, path, template);
 
-		this.container = this.element.find('[name="' + container + '"]');
-		this.entryBuilder = entryBuilder;
+		this.element.attr({
+			'tabindex': this.element.attr('tabindex') || 0
+		});
+
+		this.entryBuilder = parameters.entryBuilder;
 
 		this.collection = [];
+		this.collectionElement = this.element.find('[name="collection"]');
 		this.sortFields = [];
 	}
 	List.prototype = Object.create(Control.prototype);
 	List.prototype.constructor = List;
 
-	List.prototype._clearCollection_ = function() {
-		this.collection = [];
-		this.container.empty();
-		delete this.activeElement;
-	}
-
-	List.prototype.on = function(control, eventType, data) {
-		if ([ 'control:focusin' ].includes(eventType) && (control.root === this)) {
-			(control != this.activeElement) ? this.setActiveElement(control) : null;
-			this.send(eventType, data).activeElement.focus();
-			return false;
-		}
-		if ([ 'control:tabulate' ].includes(eventType)) {
-			this.send(eventType, data);
-			return false;
-		}
-		if ([ 'control:updown' ].includes(eventType) && (control.root === this)) {
-			if (!data.shiftKey) {
-				var updown = (data.which === 38) ? -1 : 1;
-				var nextEntry = this.nextEntry(control, updown);
-				var itemId = (control.activeElement) ? control.activeElement.itemId : undefined;
-				var activeControl = (itemId != undefined && nextEntry.tabLoop[itemId].isVisible()) ? nextEntry.tabLoop[itemId] : nextEntry.getDefaultActiveElement();
-				nextEntry.focus(activeControl);
-				return false;
-			}
-		}
-	}
-
-	List.prototype.comparator = function(entryA, entryB) {
+	List.prototype._comparator_ = function(entryA, entryB) {
 		var comparison = 0;
-		for ( var index in this.sortFields) {
+		for (var index in this.sortFields) {
 			var item = this.sortFields[index], sign = (item.sortOrder === 'desc') ? -1 : 1;
-			var fieldA = entryA.controls[item.name], a = (fieldA.input ? fieldA.input.element.val() : fieldA.getValue());
-			var fieldB = entryB.controls[item.name], b = (fieldB.input ? fieldB.input.element.val() : fieldB.getValue());
+			var fieldA = entryA.controls[item.name], a = fieldA ? ((fieldA.input ? fieldA.input.element.val() : fieldA.getValue())) : entryA.attributes[item.name];
+			var fieldB = entryB.controls[item.name], b = fieldB ? ((fieldB.input ? fieldB.input.element.val() : fieldB.getValue())) : entryB.attributes[item.name];
 			comparison = (typeof item.comparator === 'function') ? sign * item.comparator(a, b) : 0;
-			if (comparison != 0) {
+			if (comparison !== 0) {
 				break;
 			};
 		}
@@ -59,30 +35,32 @@ define([ './Control' ], function(Control) {
 		return (comparison === 0) ? (entryA.getValue() - entryB.getValue()) : comparison;
 	}
 
-	List.prototype.firstEntry = function() {
-		return (this.collection && this.collection.length) ? this.collection[0] : null;
+	List.prototype.on = function(control, eventType, data) {
+		if (['control:focusin'].includes(eventType) && (control.root === this)) {
+			this.send(eventType, data).activeElement.focus();
+			return false;
+		}
+		if (['control:tabulate'].includes(eventType)) {
+			this.send(eventType, data);
+			return false;
+		}
+		if (['control:updown'].includes(eventType) && (control.root === this)) {
+			if (!data.shiftKey) {
+				var updown = (data.which === 38) ? -1 : 1;
+				var nextEntry = this.nextEntry(control, updown);
+				var itemId = (control.activeElement) ? control.activeElement.itemId : undefined;
+				var activeControl = (itemId !== undefined && nextEntry.tabLoop[itemId].isVisible()) ? nextEntry.tabLoop[itemId] : nextEntry.getDefaultActiveElement();
+				nextEntry.focus(activeControl);
+				return false;
+			}
+		}
 	}
 
-	List.prototype.lastEntry = function() {
-		return (this.collection && this.collection.length) ? this.collection[this.collection.length - 1] : null;
-	}
-
-	List.prototype.nextEntry = function(entry, updown) {
-		return this.collection[entry.itemId + updown] || this.collection[(updown === 1) ? 0 : this.collection.length - 1];
-	}
-
-	List.prototype.getDefaultActiveElement = function() {
-		return this.firstEntry();
-	}
-
-	List.prototype.setActiveElement = function(entry) {
-		(this.activeElement && (this.activeElement != entry)) ? this.activeElement.setActiveStatus('none') : null;
-		(entry && !entry.isActive) ? entry.setActiveStatus('inactive') : null;
-
-		this.activeElement = entry;
+	List.prototype.setActiveElement = function(control) {
+		var activeElement = Control.prototype.setActiveElement.call(this, control);
 		this.send('control:changed');
 
-		return this.activeElement;
+		return activeElement;
 	}
 
 	List.prototype.sort = function(fields) {
@@ -90,19 +68,25 @@ define([ './Control' ], function(Control) {
 			return !fields.includes(item);
 		}));
 
-		this.collection.sort(this.comparator.bind(this)).forEach(function(item, index) {
+		this.collection.sort(this._comparator_.bind(this)).forEach(function(item, index) {
 			item.setItemId(this, index);
-			item.element.appendTo(this.container);
+			item.element.appendTo(this.collectionElement);
 		}.bind(this));
 
-		(this.activeElement) ? this.activeElement.focus() : null;
+		return this;
+	}
+
+	List.prototype.clear = function() {
+		this.collection = [];
+		this.collectionElement.empty();
+		this.setActiveElement(null);
 
 		return this;
 	}
 
 	List.prototype.addContent = function(data) {
 		var entries = data.map(function(item) {
-			return this.entryBuilder(this, item);
+			return this.entryBuilder(this, 'collection', item);
 		}.bind(this));
 
 		this.collection = this.collection.concat(entries);
@@ -112,45 +96,11 @@ define([ './Control' ], function(Control) {
 	}
 
 	List.prototype.setContent = function(data) {
-		this._clearCollection_();
+		this.clear();
 		this.addContent(data);
+		this.send('control:refresh');
 
-		return this.send('content:set');
-	}
-
-	List.prototype.crud = function(defaultEntryId, data) {
-		var eventType = '';
-		if (defaultEntryId < 0) {
-			eventType = 'content:create';
-		} else if (data) {
-			eventType = 'content:edit';
-		} else {
-			eventType = 'content:remove';
-		}
-
-		var defaultEntry = this.collection.find(function(item) {
-			return item.attributes.id === Math.abs(defaultEntryId);
-		});
-
-		var entries = [], collection = this.collection.slice();
-		this.collection = [];
-		collection.forEach(function(item) {
-			if (item.attributes.id === defaultEntryId) {
-				entries.push(item);
-				item.element.remove();
-			} else {
-				this.collection.push(item);
-				item.setItemId(this, this.collection.length - 1);
-			}
-		}.bind(this));
-
-		var entry = (defaultEntry) ? (this.collection[defaultEntry.itemId] || this.collection[defaultEntry.itemId - 1]) : null;
-		if (data && data.length) {
-			entry = this.addContent(data)[0];
-		}
-		this.send(eventType);
-
-		return entry;
+		return this;
 	}
 
 	List.prototype.forEach = function(handler) {
@@ -162,8 +112,20 @@ define([ './Control' ], function(Control) {
 		}
 	}
 
+	List.prototype.firstEntry = function() {
+		return this.collection.length ? this.collection[0] : null;
+	}
+
+	List.prototype.lastEntry = function() {
+		return this.collection.length ? this.collection[this.collection.length - 1] : null;
+	}
+
+	List.prototype.nextEntry = function(entry, updown) {
+		return this.collection.length ? this.collection[entry.itemId + updown] || this.collection[(updown === 1) ? 0 : this.collection.length - 1] : null;
+	}
+
 	List.prototype.getEntryById = function(id) {
-		if (this.collection && id) {
+		if (this.collection) {
 			return this.collection.find(function(item) {
 				return item.getValue() === id;
 			});
@@ -175,6 +137,17 @@ define([ './Control' ], function(Control) {
 	List.prototype.getData = function() {
 		return this.collection.map(function(entry) {
 			return entry.attributes;
+		});
+	}
+
+	List.prototype.getFullData = function() {
+		return this.collection.map(function(entry) {
+			var values = Object.keys(entry.controls).reduce(function(result, key) {
+				result[key] = entry.controls[key].getValue();
+				return result
+			}, {});
+
+			return Object.assign({}, entry.attributes, values);
 		});
 	}
 

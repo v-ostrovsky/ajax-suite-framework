@@ -1,8 +1,8 @@
-define([ './class', '../tableEntry/builder' ], function(TableTreeEntry, tableEntryBuilder) {
+define(['./class', '../tableEntry/builder'], function(TableTreeEntry, tableEntryBuilder) {
 	"use strict";
 
-	function tableEntry(context, name, properties, Class) {
-		return tableEntryBuilder(context, name, properties, (Class || TableTreeEntry));
+	function tableEntry(context, path, properties, Class) {
+		return tableEntryBuilder(context, path, properties, (Class || TableTreeEntry));
 	}
 
 	return tableEntry;

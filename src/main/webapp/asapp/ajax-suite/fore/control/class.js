@@ -1,4 +1,4 @@
-define([ 'core/Control' ], function(Control) {
+define([ 'ajax-suite/core/Control' ], function(Control) {
 	"use strict";
 
 	return Control;

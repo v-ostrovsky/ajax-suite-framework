@@ -1,8 +1,8 @@
 define([ './class' ], function(TreeBranch) {
 	"use strict";
 
-	function treeBranch(context, name, properties, Class) {
-		return new (Class || TreeBranch)(context, name, properties.template, properties.container, properties.entryBuilder);
+	function treeBranch(context, path, properties, Class) {
+		return new (Class || TreeBranch)(context, path, properties.template, properties);
 	}
 
 	return treeBranch;

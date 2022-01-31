@@ -1,9 +1,9 @@
-define([ './class', 'i18n!nls/root' ], function(TableHeader, locale) {
+define([ './class', 'i18n!ajax-suite/config/nls/root' ], function(TableHeader, locale) {
 	"use strict";
 
-	function tableHeader(context, name, properties, Class) {
+	function tableHeader(context, path, properties, Class) {
 
-		var contextmenuItems = [ 'copyTable', 'copyData' ].map(function(item) {
+		var cellContextmenuItems = [ 'copyTable', 'copyData' ].map(function(item) {
 			return {
 				name : item,
 				text : locale.contextmenu[item].text,
@@ -11,21 +11,26 @@ define([ './class', 'i18n!nls/root' ], function(TableHeader, locale) {
 				handler : function(source) {
 					source.send('contextmenu:execute', item);
 				},
+				onSetSelectedStatus : function(self, flag) {
+					self.disabled = !flag;
+				},
 				disabled : true
 			};
 		});
 
 		var handleBuilder = function(context) {
-			return properties.handleBuilder(context).setContextmenu(contextmenuItems);
+			return properties.handleBuilder(context).setContextmenu(cellContextmenuItems);
 		};
 
 		var fields = properties.fields.map(function(item) {
 			return function(context) {
-				return item(context).setContextmenu(contextmenuItems);
+				return item(context).setContextmenu(cellContextmenuItems);
 			};
 		});
 
-		return new (Class || TableHeader)(context, name, properties.template, handleBuilder).setContent(fields);
+		return new (Class || TableHeader)(context, path, properties.template, {
+			handleBuilder : handleBuilder
+		}).setContent(fields);
 	}
 
 	return tableHeader;

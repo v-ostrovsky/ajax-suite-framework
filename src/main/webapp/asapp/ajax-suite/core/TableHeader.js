@@ -1,20 +1,26 @@
 define([ './Control' ], function(Control) {
 	"use strict";
 
+	// TODO Подумать о том, чтобы сделать table.header, подобно table.footer, в виде list
+
 	/*
 	 * ------------- TABLE HEADER CLASS --------------
 	 */
-	function TableHeader(context, name, template, handleBuilder) {
-		Control.call(this, context, name, template);
+	// , handleBuilder
+	function TableHeader(context, path, template, parameters) {
+		Control.call(this, context, path, template);
 
-		this.handle = handleBuilder(this);
+		this.handle = parameters.handleBuilder(this);
+		this.handle.element.removeAttr('tabindex');
 	}
 	TableHeader.prototype = Object.create(Control.prototype);
 	TableHeader.prototype.constructor = TableHeader;
 
 	TableHeader.prototype.addContent = function(fieldBuilders) {
 		var fields = this.fields.concat(fieldBuilders.map(function(item) {
-			return item(this);
+			var field = item(this);
+			field.element.removeAttr('tabindex');
+			return field;
 		}.bind(this)))
 
 		var children = this.element.find('[name]');

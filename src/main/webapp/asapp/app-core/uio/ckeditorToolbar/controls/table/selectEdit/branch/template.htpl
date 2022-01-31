@@ -1,0 +1,6 @@
+<div name="branch">
+	<div style="display: flex;" name="node">
+		<div class="button-expcol" name="expcol"></div>
+	</div>
+	<div style="padding-left: 20px;" name="collection"></div>
+</div>

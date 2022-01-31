@@ -1,34 +1,37 @@
-define([ './primitives' ], function(primitives) {
+define([ './Control' ], function(Control) {
 	"use strict";
-
-	var Field = primitives.Field;
 
 	/*
 	 * ------------- TABLE HANDLE CLASS --------------
 	 */
-	function TableHandle(context, name) {
-		Field.call(this, context, name);
+	function TableHandle(context, path) {
+		Control.call(this, context, path);
 
-		this.element.css({
-			'box-sizing' : 'content-box'
-		});
-
-		this.element.on({
-			dblclick : function(event) {
-				this.send('handle:dblclick');
-			}.bind(this),
+		this.element.attr({
+			'tabindex' : 0
+		}).on({
 			mousedown : function(event) {
-				if (event.shiftKey) {
-					event.preventDefault();
-				}
 				if (event.which === 1) {
+					event.preventDefault();
 					this.send('handle:mousedown', event);
 				}
+			}.bind(this),
+			dblclick : function(event) {
+				this.send('handle:dblclick');
 			}.bind(this)
 		});
 	}
-	TableHandle.prototype = Object.create(Field.prototype);
+	TableHandle.prototype = Object.create(Control.prototype);
 	TableHandle.prototype.constructor = TableHandle;
+
+	TableHandle.prototype.setValue = function(value) {
+		this.element.html(value);
+		return this;
+	}
+
+	TableHandle.prototype.getValue = function() {
+		return this.element.html();
+	}
 
 	return TableHandle;
 });

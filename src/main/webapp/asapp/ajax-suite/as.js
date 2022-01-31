@@ -1,11 +1,12 @@
-define([ 'css!./config/css/style', 'i18n!nls/root', 'icons/dir', 'dao/dir', 'fore/dir', 'plugins/dir' ], function(css, locale, icons, dao, fore, plugins) {
-	"use strict";
+define(['text!ajax-suite/config/css/properties.css', 'text!ajax-suite/config/css/style.css', 'i18n!ajax-suite/config/nls/root', 'ajax-suite/fore/@dir', 'ajax-suite/rear/rear', 'ajax-suite/utils/@dir'],
+	function(properties, style, locale, fore, rear, utils) {
+		"use strict";
 
-	return {
-		locale : locale,
-		icons : icons,
-		dao : dao,
-		generics : fore,
-		plugins : plugins
-	};
-});
+		return {
+			style: properties.concat(style),
+			locale: locale,
+			generics: fore,
+			rear: rear,
+			utils: utils
+		};
+	});

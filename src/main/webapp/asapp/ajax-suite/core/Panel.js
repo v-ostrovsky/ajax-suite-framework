@@ -4,27 +4,23 @@ define([ './Control' ], function(Control) {
 	/*
 	 * ------------- PANEL CLASS --------------
 	 */
-	function Panel(context, name, template) {
-		Control.call(this, context, name, template);
+	function Panel(context, path, template) {
+		Control.call(this, context, path, template);
 	}
 	Panel.prototype = Object.create(Control.prototype);
 	Panel.prototype.constructor = Panel;
 
 	Panel.prototype.on = function(control, eventType, data) {
-		if ([ 'control:focusin' ].includes(eventType) && (control.context === this)) {
-			if (control != this.activeElement) {
-				this.setActiveElement(control);
-			}
-			this.send(eventType, data).activeElement.focus();
-			return false;
-		}
 		if ([ 'control:tabulate' ].includes(eventType) && (control.context === this)) {
 			this.nextControl(control, data);
 			return false;
 		}
-		if ([ 'control:changed', 'field:input' ].includes(eventType) && (control.context === this)) {
-			this.calculate();
+		if ([ 'panel:loopend' ].includes(eventType) && (control.context === this)) {
+			this.nextControl(control, data);
 			return false;
+		}
+		if ([ 'control:changed' ].includes(eventType) && (control.context === this)) {
+			this.calculate();
 		}
 	}
 
@@ -33,7 +29,6 @@ define([ './Control' ], function(Control) {
 			var control = item.builder(this);
 			if (control) {
 				this.controls[item.name] = control;
-				this.controls[item.name].tabindex = parseInt(this.controls[item.name].element.attr('tabindex'));
 			}
 		}.bind(this));
 
@@ -60,6 +55,8 @@ define([ './Control' ], function(Control) {
 	}
 
 	Panel.prototype.nextControl = function(control, shift) {
+		control = this.tabLoop.includes(control) ? control : null;
+
 		var next = function(control, shift) {
 			var index;
 			if (shift === 1) {
@@ -72,7 +69,7 @@ define([ './Control' ], function(Control) {
 			}
 
 			if (index === null) {
-				this.send('control:tabulate', shift);
+				this.send('panel:loopend', shift);
 				return null;
 			} else {
 				var nextControl = this.tabLoop[index].focus();
@@ -86,33 +83,29 @@ define([ './Control' ], function(Control) {
 		}.bind(this);
 
 		var nextControl = next(control, shift);
-		while (nextControl && !nextControl.isActive && (nextControl != control)) {
+		while (nextControl && !nextControl.isActive && (nextControl !== control)) {
 			nextControl = next(nextControl, shift);
 		}
 	}
 
 	Panel.prototype.getDefaultActiveElement = function() {
 		return this.tabLoop.find(function(item) {
-			return item.isVisible();
+			return (item.isVisible() && !item.isDisabled());
 		});
-	}
-
-	Panel.prototype.setActiveElement = function(control) {
-		this.tabLoop.forEach(function(item) {
-			(item != control) ? item.setActiveStatus('none') : null;
-		});
-
-		return this.activeElement = control;
 	}
 
 	Panel.prototype.calculate = function() {
 		for ( var item in this.controls) {
-			if (typeof this.controls[item].calculator === 'function') {
+			if (this.controls[item].calculator) {
 				this.controls[item].setValue(this.controls[item].getValue());
 			}
 		}
 
 		return this;
+	}
+
+	Panel.prototype.destroyContainer = function() {
+		return this.send('control:destroy');
 	}
 
 	return Panel;

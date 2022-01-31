@@ -1,14 +1,13 @@
-define([ './class', '../button/builder', 'i18n!nls/root' ], function(Form, button, locale) {
+define([ './class', '../primitive/button/builder', 'i18n!ajax-suite/config/nls/root' ], function(Form, button, locale) {
 	"use strict";
 
-	function form(context, name, properties, Class) {
+	function form(context, path, properties, Class) {
 
 		properties.controls = properties.controls.concat([ 'submit' ].map(function(item) {
 			var props = {
 				defaultValue : locale.form[item],
 				handler : function(self) {
-					self.context.send('execute', 'destroy');
-					return self.context.submit(properties.onSubmit);
+					self.context.submit(properties.onOk, properties.onWarn);
 				}
 			};
 
@@ -20,7 +19,11 @@ define([ './class', '../button/builder', 'i18n!nls/root' ], function(Form, butto
 			};
 		}));
 
-		return new (Class || Form)(context, name, properties.template).setContent(properties.controls).fillContent(properties.attributes).send('setHeader', properties.header || '');
+		var form = new (Class || Form)(context, path, properties.template).setContent(properties.controls).fillContent(properties.attributes || {});
+		(properties.visible !== undefined) ? form.setVisibility(properties.visible) : null;
+		(properties.header !== undefined) ? form.send('setHeader', properties.header) : null;
+
+		return form;
 	}
 
 	return form;

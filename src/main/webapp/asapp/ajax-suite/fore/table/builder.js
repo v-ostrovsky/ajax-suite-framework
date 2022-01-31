@@ -1,8 +1,12 @@
 define([ './class' ], function(Table) {
 	"use strict";
 
-	function table(context, name, properties, Class) {
-		return new (Class || Table)(context, name, properties.template, properties.headerBuilder, properties.contentBuilder, properties.footerBuilder);
+	function table(context, path, properties, Class) {
+		var table = new (Class || Table)(context, path, properties.template, properties);
+		(typeof properties.text === 'string') ? table.setLabel(name, properties.text) : null;
+		(properties.visible !== undefined) ? table.setVisibility(properties.visible) : null;
+
+		return table;
 	}
 
 	return table;

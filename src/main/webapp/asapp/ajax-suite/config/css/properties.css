@@ -1,0 +1,84 @@
+:root { 
+	--as-font-size: 11px; 
+	--as-font-family: sans-serif; 
+	--as-font-color: initial;
+	--as-font-color-active: white; 
+	--as-font-color-error: rgb(255, 0, 0);
+	--as-font-size-contextmenu: 11.5px;
+	
+	--as-line-height-main: 1.5;
+	--as-line-height-table: 1.7;
+	
+	--as-background-color-main: white;
+	--as-background-color-contextmenu: white;
+	--as-background-color-contextmenu-hover: rgb(204, 204, 204);
+	--as-background-color-input: rgb(255, 255, 213); 
+	--as-background-color-tooltip: rgb(255, 255, 213); 
+	--as-background-color-active: rgb(51, 153, 255); 
+	--as-background-color-inactive: linear-gradient(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06));
+	--as-background-color-selected: rgb(236, 243, 255); 
+	--as-background-color-warn: rgb(255, 221, 153); 
+	--as-background-color-error: rgb(255, 184, 184); 	
+	--as-background-color-selector: white; 
+	--as-background-color-table: white;	
+	--as-background-color-window-handle: white;
+	--as-background-color-window-body: var(--as-background-color-main);
+	--as-background-color-tab-handle: var(--as-background-color-main);
+	--as-background-color-tab-body: var(--as-background-color-main);
+	
+	--as-width-contextmenu-min: 200px;
+	--as-width-button-expcol: 9px;
+	--as-width-radio: 20px;
+	--as-width-table-row-handle: 35px;
+	--as-width-window-min: 200px;
+	--as-width-tab-min: 1000px;
+	--as-width-tab-handle: 140px;
+	
+	--as-height-field: 24px;
+	--as-height-button: 24px; 
+	--as-height-button-list: 18px; 
+	--as-height-button-tree: 18px; 
+	--as-height-window-handle: 28px;
+	--as-height-tab-handle: 28px;
+	
+	--as-border-width: 1px; 
+	--as-border-width-minus: -1px; 
+	--as-border-radius-small: 3px; 
+	--as-border-radius-standard: 6px; 	
+	--as-border-color: rgb(170, 170, 170); 
+	--as-border-color-active: rgb(51, 153, 255); 
+	--as-border-color-warn: rgb(255, 170, 0); 
+	--as-border-color-error: rgb(255, 0, 0); 
+	--as-border: var(--as-border-width) solid var(--as-border-color); 
+	--as-border-dummy: var(--as-border-width) solid rgba(255, 255, 255, 0); 
+	
+	--as-outline-color-active: inset 0px 0px 0px 0.5px var(--as-border-color-active); 	
+	--as-outline-color-warn: inset 0px 0px 0px 0.5px var(--as-border-color-warn); 	
+	--as-outline-color-error: inset 0px 0px 0px 0.5px var(--as-border-color-error); 
+		
+	--as-box-shadow-small: 1px 1px 3px 0px rgba(85, 85, 85, 1.0);
+	--as-box-shadow-middle: 1.5px 1.5px 6px 0px rgba(85, 85, 85, 0.9);
+	--as-box-shadow-large: 2px 2px 10px 0px rgba(85, 85, 85, 0.8);
+	
+	--as-margin-vertical: 3px; 
+	--as-margin-contextmenu: 6px; 
+	--as-margin-button-list: 1px;
+	--as-margin-button-tree: 1px; 
+	--as-margin-button-expcol: 2px;  
+	--as-margin-table-cell: var(--as-border-width-minus) 0px 0px var(--as-border-width-minus); 
+	--as-margin-footer-cell: var(--as-border-width-minus) 0px var(--as-border-width-minus) 0px; 
+	
+	--as-padding-standard: 4px; 
+	--as-padding-large: 6px; 
+	--as-padding-wide: var(--as-padding-standard) var(--as-padding-large); 
+	--as-padding-contextmenu: 2px 0px; 
+	--as-padding-contextmenu-item: 5px 26px; 
+	--as-padding-contextmenu-hotkey: 0 0 0 50px; 
+	--as-padding-label: 0 4px; 
+	--as-padding-field: 1px 4px; 
+	--as-padding-button-text: 0px 4px; 
+	--as-padding-button-image: 2px;
+	--as-padding-button-list: 0.5px 4px;
+	--as-padding-button-tree: 0.5px 4px; 
+	--as-padding-table-cell: 1px 4px 0px;
+}

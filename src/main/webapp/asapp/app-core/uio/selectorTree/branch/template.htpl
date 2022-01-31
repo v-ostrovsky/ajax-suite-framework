@@ -1,0 +1,4 @@
+<div name="branch">
+	<div style="display: flex;" name="node"></div>
+	<div style="padding-left: 14px;" name="collection"></div>
+</div>

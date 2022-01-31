@@ -1,0 +1,11 @@
+<div class="group cck-editor-message" style="margin-bottom: 12px;" tabindex=0 name="entry">
+	<div class="buttons-top" style="margin: 0px; padding: 8px 10px 4px; font-size: 0.85em;">
+		<div class="buttons-group" style="min-width: 0; flex: 1;">
+			<div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" name="time"></div>
+		</div>
+		<div class="buttons-group" style="min-width: 0; flex: 1; justify-content: flex-end;">
+			<div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" name="userText"></div>
+		</div>
+	</div>
+	<div name="content"></div>
+</div>

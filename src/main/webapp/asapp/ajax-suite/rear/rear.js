@@ -1,25 +1,14 @@
 define([], function() {
 	"use strict";
 
+	// TODO Сделать выбрасывание ошибки при вызове execute внутри execute, вызываемом на объекте из той же цепочки
 	var debug = false;
-
-	/*
-	 * ------------- UTILITIES --------------
-	 */
-	function mixin(target, source) {
-		var excluded = [ '_requestParams', '_handler_' ];
-		for ( var attr in source) {
-			if (source.hasOwnProperty(attr) && !target.hasOwnProperty(attr) && !excluded.includes(attr)) {
-				target[attr] = source[attr];
-			}
-		}
-	}
 
 	/*
 	 * ------------- REAR SINGLETON --------------
 	 */
 	var rear = {
-		currentContext : null
+		currentContext: null
 	};
 
 	/*
@@ -27,26 +16,23 @@ define([], function() {
 	 */
 	function Pendent(requestParams) {
 		Pendent.instanceId = (Pendent.instanceId === undefined) ? 0 : Pendent.instanceId + 1;
-		this._instanceId_ = Pendent.instanceId;
-		this._isResolved_ = false;
+		this.instanceId = Pendent.instanceId;
+		this._status_ = 'none';
 		this._children_ = [];
 		this._context_ = rear.currentContext;
 		if (this._context_) {
 			this._context_._children_.push(this);
 		}
-		if (requestParams) {
-			this._requestParams = requestParams;
-		}
+		this._requestParams = requestParams;
 
 		if (debug) {
-			this._request_ = requestParams;
-			rear.instances[this._instanceId_] = this;
+			rear.instances[this.instanceId] = this;
 		}
 	}
 
 	Pendent.prototype._setHandler_ = function(handler) {
-		if (this._isResolved_) {
-			handler();
+		if (['resolved', 'terminated'].includes(this._status_)) {
+			handler('resolved');
 		} else {
 			this._handler_ = handler;
 		}
@@ -54,93 +40,102 @@ define([], function() {
 		return this;
 	}
 
-	Pendent.prototype._resolve_ = function() {
-		if (this._isResolved_) {
-			console.error('The object with the _instanceId_=' + this._instanceId_ + ' has already been resolved');
-			return;
+	Pendent.prototype._resolve_ = function(status) {
+		if (['resolved'].includes(status)) {
+			if (['resolved', 'terminated'].includes(this._status_)) {
+				console.error('The object with the instanceId=' + this.instanceId + ' has already been ' + this._status_);
+				return this;
+			}
+
+			var unresolved = this._children_.filter(function(item) {
+				return (['none'].includes(item._status_));
+			});
+
+			if (unresolved.length > 0) {
+				return this;
+			}
 		}
 
-		var unresolved = this._children_.filter(function(item) {
-			return !item._isResolved_;
-		});
+		if (this.hasOwnProperty('_handler_')) {
+			this._handler_(status);
+		}
 
-		if (unresolved.length === 0) {
-			this._isResolved_ = true;
-
-			if (this.hasOwnProperty('_handler_')) {
-				this._handler_();
-			} else if (this._context_) {
-				this._context_._resolve_();
-			}
+		this._status_ = status;
+		if (this._context_) {
+			this._context_._resolve_(status);
 		}
 
 		return this;
 	}
 
-	Pendent.prototype._sendRequest = function() {}
+	Pendent.prototype._sendRequest = function() { }
 
 	Pendent.prototype._postProcessor = function(response) {
 		return response;
 	}
 
-	Pendent.prototype._oncomplete = function(status, response) {
-		this.status = status;
-		this._response_ = this._postProcessor(response);
-		this._resolve_();
+	Pendent.prototype._oncomplete = function(response) {
+		this._response = this._postProcessor(response);
+		this._resolve_('resolved');
 	}
 
 	/*
-	 * ------------- SUSPENDED ABSTRACT CLASS --------------
+	 * ------------- FETCHER ABSTRACT CLASS --------------
 	 */
-	function Suspended(parameters) {
+	function Fetcher() {
 		Pendent.call(this);
 
-		this.parameters = parameters || {};
-		this._isResolved_ = true;
+		this._status_ = 'resolved';
 	}
-	Suspended.prototype = Object.create(Pendent.prototype);
-	Suspended.prototype.constructor = Pendent;
+	Fetcher.prototype = Object.create(Pendent.prototype);
+	Fetcher.prototype.constructor = Pendent;
 
-	Suspended.prototype.fetch = function(requestParams) {
+	Fetcher.prototype.fetch = function(requestParams) {
 		var reopened = Object.create(this);
 		Pendent.call(reopened, requestParams);
 
-		this._setHandler_(function() {
-			if (typeof reopened._requestParams === 'function') {
-				reopened._requestParams = reopened._requestParams(reopened._response_);
-			}
+		this._setHandler_(function(status) {
+			if (['resolved'].includes(status)) {
+				if (typeof reopened._requestParams === 'function') {
+					reopened._requestParams = reopened._requestParams(reopened._response);
+				}
 
-			mixin(reopened, this);
-			reopened._sendRequest();
+				reopened._sendRequest();
+			} else {
+				reopened._resolve_('terminated');
+				this._status_ = 'resolved';
+			}
 		}.bind(this));
 
 		return reopened;
 	}
 
-	Suspended.prototype.execute = function(callback) {
+	Fetcher.prototype.execute = function(callback) {
 		var reopened = Object.create(this);
-		Pendent.call(reopened);
+		Pendent.call(reopened, callback);
 
-		if (debug) {
-			reopened._request_ = 'execute';
-		}
-
-		this._setHandler_(function() {
-			if (this._response_ !== false) {
-				mixin(reopened, this);
+		this._setHandler_(function(status) {
+			if (['resolved'].includes(status)) {
 				var currentContext = rear.currentContext;
 				rear.currentContext = reopened;
-				var returnValue = callback.call(reopened, reopened._response_);
-				reopened._response_ = (returnValue != undefined) ? returnValue : reopened._response_;
+				var dummyChild = new Pendent();
+				var returnValue = reopened._requestParams(reopened._response);
+				reopened._response = (returnValue !== undefined) ? returnValue : reopened._response;
+				if (reopened._response === false) {
+					dummyChild._resolve_('terminated');
+				} else {
+					dummyChild._resolve_('resolved');
+				}
 				rear.currentContext = currentContext;
+			} else {
+				reopened._resolve_('terminated');
 			}
-			reopened._resolve_();
 		}.bind(this));
 
 		return reopened;
 	}
 
-	rear.Suspended = Suspended;
+	rear.Fetcher = Fetcher;
 
 	/*
 	 * ------------- EXECUTION --------------

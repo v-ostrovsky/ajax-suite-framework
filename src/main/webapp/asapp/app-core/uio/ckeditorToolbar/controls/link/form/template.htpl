@@ -1,0 +1,13 @@
+<div style="flex: 1; display: flex; flex-direction: column;">
+	<div style="flex: 1; display: flex; flex-direction: column;">
+		<div class="field-group" style="flex: 1;">
+			<textarea class="field" rows="3" placeholder="https://example.com" tabindex=1 name="href"></textarea>
+		</div>
+	</div>
+	<div class="buttons-bottom">
+		<div class="buttons-group"></div>
+		<div class="buttons-group">
+			<div class="button button-text" style="margin-right: 0;" tabindex=2 name="submit"></div>
+		</div>
+	</div>
+</div>

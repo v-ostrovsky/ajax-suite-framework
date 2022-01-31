@@ -1,0 +1,21 @@
+<div class="button dropdown-text" style="width: 110px;" name="fontFamily"></div>
+<div class="button dropdown-text" style="width: 70px;" name="fontSize"></div>
+<div class="button button-image" name="bold"></div>
+<div class="button button-image" name="italic"></div>
+<div class="button button-image" name="underline"></div>
+<div class="button button-image" name="strikethrough"></div>
+<div class="button button-image" name="red"></div>
+<div class="button dropdown-text" style="width: 100px;" name="heading"></div>
+<div class="button dropdown-image" name="alignment"></div>
+<div class="button button-image" name="outdent"></div>
+<div class="button button-image" name="indent"></div>
+<div class="button button-image" name="bulletedList"></div>
+<div class="button button-image" name="numberedList"></div>
+<div class="button button-image" name="flexSection"></div>
+<div class="button button-image" name="image"></div>
+<div class="button dropdown-image" name="imageStyled"></div>
+<div class="button button-image" name="link"></div>
+<div class="button button-image" name="localLink"></div>
+<div class="button button-image" name="blockQuote"></div>
+<div class="button button-image" name="undo"></div>
+<div class="button button-image" name="redo"></div>

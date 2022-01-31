@@ -1,0 +1,13 @@
+<div style="width: 400px; flex: 1; display: flex; flex-direction: column;">
+	<div style="height: 0%; flex: 1; display: flex; flex-direction: column;">
+		<div style="margin-bottom: 6px;" name="href-label"></div>
+		<div class="group" style="height: 400px; flex: 1; padding: 6px;" tabindex=1 name="href"></div>
+		<div name="subhref"></div>
+	</div>
+	<div class="buttons-bottom">
+		<div class="buttons-group"></div>
+		<div class="buttons-group">
+			<div class="button button-text" style="margin-right: 0;" tabindex=3 name="submit"></div>
+		</div>
+	</div>
+</div>

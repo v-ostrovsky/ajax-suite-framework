@@ -1,0 +1,12 @@
+<div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+	<div style="overflow-y: auto;">
+		<div style="display: flex; flex-direction: column; margin-bottom: 6px;" name="message"></div>
+	</div>
+	<div class="buttons-bottom">
+		<div class="buttons-group"></div>
+		<div class="buttons-group">
+			<div class="button button-text" style="margin-right: 4px;" tabindex=1 name="no"></div>
+			<div class="button button-text" style="margin-right: 0;" tabindex=2 name="submit"></div>
+		</div>
+	</div>
+</div>

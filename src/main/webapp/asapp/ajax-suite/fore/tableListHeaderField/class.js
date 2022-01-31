@@ -1,11 +1,11 @@
-define([ '../tableHeaderField/class', 'core/primitives' ], function(Class, primitives) {
+define([ '../tableHeaderField/class', 'ajax-suite/core/primitives/@dir' ], function(Class, primitives) {
 	"use strict";
 
 	/*
 	 * ------------- GENEGIC TABLE LIST HEADER FIELD CLASS --------------
 	 */
-	function TableListHeaderField(context, name, msoFormatter) {
-		Class.call(this, context, name, msoFormatter);
+	function TableListHeaderField(context, path, msoFormatter) {
+		Class.call(this, context, path, msoFormatter);
 	}
 	TableListHeaderField.prototype = Object.create(Class.prototype);
 	TableListHeaderField.prototype.constructor = TableListHeaderField;
@@ -13,7 +13,7 @@ define([ '../tableHeaderField/class', 'core/primitives' ], function(Class, primi
 	TableListHeaderField.prototype.setSortButton = function(fieldComparator) {
 		this.comparator = fieldComparator;
 		this.element.append('<div name="button"></div>');
-		this.button = new primitives.Button(this, 'button', this.send.bind(this, 'header:sort'), '▽', false);
+		this.button = new primitives.Button(this, 'button', '', {}).setHandler(this.send.bind(this, 'header:sort')).setView('&#x25BD');
 		this.button.element.css({
 			'float' : 'right',
 			'cursor' : 'default',
@@ -31,7 +31,7 @@ define([ '../tableHeaderField/class', 'core/primitives' ], function(Class, primi
 				desc : '&#x25B2',
 				none : '&#x25BD'
 			};
-			this.button.element.html(icon[status]);
+			this.button.setView(icon[status]);
 		}
 
 		return this;

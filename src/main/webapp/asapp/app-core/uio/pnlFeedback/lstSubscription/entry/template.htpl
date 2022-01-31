@@ -1,0 +1,6 @@
+<div name="entry">
+	<div class="field-group" style="margin: 0;">
+		<div class="label" name="chrome-label"></div>
+		<div class="field checkbox" tabindex=1 name="chrome"></div>
+	</div>
+</div>

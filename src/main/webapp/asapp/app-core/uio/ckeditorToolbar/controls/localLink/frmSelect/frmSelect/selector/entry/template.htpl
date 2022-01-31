@@ -1,0 +1,7 @@
+<div name="entry">
+	<div class="field-group">
+		<div name="created-label"></div>
+		<div name="created"></div>
+	</div>
+	<div class="cck-text-entry" tabindex=1 name="textId"></div>
+</div>

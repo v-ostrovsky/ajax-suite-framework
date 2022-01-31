@@ -1,0 +1,64 @@
+table {
+	border-collapse: collapse;
+	table-layout: fixed;
+	vertical-align: middle;
+	color: black;
+	font-size: 10.0pt;
+	font-weight: 400;
+	font-style: normal;
+	text-decoration: none;
+	font-family: "Times New Roman", serif;
+	white-space: nowrap;
+	mso-font-charset: 204;
+	mso-background-source: auto;
+	mso-pattern: auto;
+	mso-displayed-decimal-separator: "\,";
+	mso-displayed-thousand-separator: " ";
+	mso-ignore: padding;
+}
+
+th {
+	border: .5pt solid windowtext;
+	padding: 0px 4pt;
+	text-align: center;
+	mso-number-format: General;
+}
+
+td {
+	border: .5pt solid windowtext;
+	padding: 0px 4pt;
+	text-align: left;
+	mso-char-indent-count: 1;
+	mso-number-format: General;
+}
+
+.indent {
+	padding-left: 20pt;
+	mso-char-indent-count: 4;
+}
+
+.title {
+	padding: 2pt 1pt;
+	border: none;
+	font-size: 120%;
+	font-weight: 700;
+	mso-number-format: \@;
+}
+
+.number, .currency {
+	padding-right: 4pt;
+	text-align: right;
+}
+
+.number {
+	mso-number-format: \#\ \#\#0\;
+}
+
+.currency {
+	mso-number-format: Standard;
+}
+
+.date {
+	text-align: center;
+	mso-number-format: "dd\/mm\/yy\;\@";
+}

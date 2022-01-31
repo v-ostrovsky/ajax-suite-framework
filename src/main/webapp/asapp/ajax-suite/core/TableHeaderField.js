@@ -4,8 +4,8 @@ define([ './Control' ], function(Control) {
 	/*
 	 * ------------- TABLE HEADER FIELD CLASS --------------
 	 */
-	function TableHeaderField(context, name) {
-		Control.call(this, context, name);
+	function TableHeaderField(context, path) {
+		Control.call(this, context, path);
 
 		this.isInvisible = false;
 

@@ -1,17 +1,20 @@
-define([ './class', 'i18n!nls/root' ], function(TableEntry, locale) {
+define(['./class', 'i18n!ajax-suite/config/nls/root'], function(TableEntry, locale) {
 	"use strict";
 
-	function entry(context, properties, Class) {
+	function entry(context, path, properties, Class) {
 
-		var cellContextmenuItems = [ 'copyTable', 'copyData' ].map(function(item) {
+		var cellContextmenuItems = ['copyTable', 'copyData'].map(function(item) {
 			return {
-				name : item,
-				text : locale.contextmenu[item].text,
-				hotkey : locale.contextmenu[item].hotkey,
-				handler : function(source) {
+				name: item,
+				text: locale.contextmenu[item].text,
+				hotkey: locale.contextmenu[item].hotkey,
+				handler: function(source) {
 					source.send('contextmenu:execute', item);
 				},
-				disabled : true
+				onSetSelectedStatus: function(self, flag) {
+					self.disabled = !flag;
+				},
+				disabled: true
 			};
 		});
 
@@ -19,7 +22,16 @@ define([ './class', 'i18n!nls/root' ], function(TableEntry, locale) {
 			return properties.handleBuilder(context).setContextmenu(cellContextmenuItems);
 		}
 
-		return new (Class || TableEntry)(context, properties.template, handleBuilder).setContent(properties.controls).fillContent(properties.attributes).setContextmenu(properties.contextmenuItems);
+		var controls = properties.controls.map(function(item) {
+			return {
+				name: item.name,
+				builder: function(context) {
+					return item.builder(context).setContextmenu(cellContextmenuItems);
+				}
+			};
+		});
+
+		return new (Class || TableEntry)(context, path, properties.template, handleBuilder).setContent(controls).fillContent(properties.attributes).setContextmenu(properties.contextmenuItems);
 	}
 
 	return entry;

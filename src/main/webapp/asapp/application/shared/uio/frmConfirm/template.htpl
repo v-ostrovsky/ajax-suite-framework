@@ -1,8 +1,0 @@
-<div class="message" style="max-width: 500px;" name="message"></div>
-<div class="buttons-bottom">
-	<div class="buttons-left"></div>
-	<div class="buttons-right">
-		<button class="button button-text" tabindex=2 name="submit"></button>
-		<button class="button button-text" tabindex=1 name="no"></button>
-	</div>
-</div>

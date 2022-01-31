@@ -1,77 +1,119 @@
-define([], function() {
+define(['./Control', './Window', 'ajax-suite/utils/@dir'], function(Control, Window, utils) {
 	"use strict";
 
 	/*
 	 * ------------- WINDOW MANAGER CLASS --------------
 	 */
-	function WindowManager(context) {
-		this.application = context;
-		this.context = context;
-		this.element = this.context.element.children('[name="windows"]');
+	function WindowManager(context, path) {
+		Control.call(this, context, path);
 
 		this.windows = [];
 	}
+	WindowManager.prototype = Object.create(Control.prototype);
+	WindowManager.prototype.constructor = WindowManager;
 
-	WindowManager.prototype._on_ = function(control, eventType, data) {
-		if ([ 'control:focusin' ].includes(eventType) && (control.root === this)) {
-			if (control != this.activeElement) {
-				this.setActiveElement(control);
-			}
-			this.activeElement.focus();
+	WindowManager.prototype.on = function(control, eventType, data) {
+		if (['control:focusin'].includes(eventType) && (control.root === this)) {
+			this.send(eventType, data).activeElement.focus();
 			return false;
 		}
-		if ([ 'window:destroy' ].includes(eventType)) {
+		if (['control:destroy'].includes(eventType)) {
 			this.removeWindow(control);
+			this.send('config:changed');
 			return false;
 		}
-
-		this.context._on_(control, eventType, data);
+		if (['handle:mousedown'].includes(eventType) && (control.root === this)) {
+			this.setActiveElement(control).focus();
+			this.send('config:changed');
+			return false;
+		}
 	}
 
-	WindowManager.prototype.setActiveElement = function(window) {
-		(this.activeElement && (this.activeElement != window)) ? this.activeElement.setActiveStatus('none') : null;
+	WindowManager.prototype.setActiveElement = function(asWindow) {
+		if (this.windows.includes(asWindow)) {
+			if (asWindow && !asWindow.backdrop) {
+				this.windows.splice(asWindow.itemId, 1);
+				this.windows.push(asWindow);
+				this.windows.forEach(function(item, i) {
+					item.setItemId(this, i);
+				}.bind(this));
+				asWindow.element.appendTo(this.element);
+			}
 
-		this.windows.splice(window.itemId, 1);
-		this.windows.push(window);
-		this.windows.forEach(function(item, i) {
-			item.setItemId(this, i);
-		}.bind(this));
-		(window.backdrop) ? window.backdrop.appendTo(this.element) : window.element.appendTo(this.element);
-
-		(window && !window.isActive) ? window.setActiveStatus('inactive') : null;
-
-		return this.activeElement = window;
+			return Control.prototype.setActiveElement.call(this, asWindow);
+		} else {
+			return null;
+		}
 	}
 
-	WindowManager.prototype.addWindow = function(windowBuilder, isDialog) {
-		var window = windowBuilder(this).setItemId(this, this.windows.length);
+	WindowManager.prototype.addWindow = function(contentBuilder, isDialog, position) {
+		var asWindow = new Window(this, contentBuilder, position).setItemId(this, this.windows.length);
 
 		if (isDialog) {
-			window.backdrop = window.element.wrap($('<div>').css({
-				'position' : 'absolute',
-				'top' : '0',
-				'left' : '0',
-				'width' : '100%',
-				'height' : '100%'
+			asWindow.backdrop = asWindow.element.wrap($('<div>').css({
+				'position': 'absolute',
+				'top': '0',
+				'left': '0',
+				'width': '100%',
+				'height': '100%'
 			}).on({
-				mousedown : function(event) {
-					event.preventDefault();
-					event.stopPropagation();
+				mousedown: function(event) {
+					if (event.cancelable) {
+						event.preventDefault();
+						event.stopPropagation();
+					}
 				}
 			})).parent();
 		}
 
-		this.windows.push(window);
+		this.windows.push(asWindow);
 
-		return this.windows[this.windows.length - 1].focus();
+		asWindow.element.hide().fadeTo('slow', 1);
+
+		return asWindow.focus();
 	}
 
-	WindowManager.prototype.removeWindow = function(window) {
-		if (window === this.activeElement) {
-			(window.backdrop) ? window.backdrop.remove() : window.element.remove();
-			this.windows.splice(this.windows.length - 1, 1);
-			(this.windows.length) ? this.windows[this.windows.length - 1].focus() : this.context.focus();
+	WindowManager.prototype.removeWindow = function(asWindow) {
+		if (this.windows.includes(asWindow)) {
+			this.windows = this.windows.filter(function(item) {
+				return (item !== asWindow);
+			});
+
+			if (typeof asWindow.content.onContainerDestroy === 'function') {
+				asWindow.content.onContainerDestroy();
+			}
+
+			if (asWindow.backdrop) {
+				asWindow.backdrop.fadeOut(300, function() {
+					asWindow.backdrop.remove();
+				});
+			} else {
+				asWindow.element.fadeOut(300, function() {
+					asWindow.element.remove();
+				});
+			}
+
+			if (asWindow === this.activeElement) {
+				this.windows.length ? this.setActiveElement(this.windows[this.windows.length - 1]).focus() : this.context.focus();
+			}
 		}
+
+		return this.activeElement;
+	}
+
+	WindowManager.prototype.getConfig = function() {
+		var config = utils.config();
+
+		config.routes = this.windows.reduce(function(accumulator, item) {
+			(item.route) ? accumulator.push(item.route) : null;
+			return accumulator;
+		}, []);
+
+		if (config.routes.length) {
+			config.setActiveRoute(this.activeElement.route);
+		}
+
+		return config;
 	}
 
 	return WindowManager;

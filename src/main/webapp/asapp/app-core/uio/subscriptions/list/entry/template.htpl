@@ -1,0 +1,5 @@
+<div style="display: flex;" name="entry">
+	<div class="table-cell table-field" style="line-height: 32px;" name="textId"></div>
+	<div class="table-cell table-field" style="flex: 0 0 32px; font-size: 18px;" name="chrome"></div>
+	<div class="table-cell table-field" style="flex: 0 0 32px; font-size: 18px;" name="telegram"></div>
+</div>

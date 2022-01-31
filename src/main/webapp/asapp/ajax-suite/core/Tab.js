@@ -1,19 +1,18 @@
-define([ './Control', './primitives' ], function(Control, primitives) {
+define(['./Control', './primitives/@dir'], function(Control, primitives) {
 	"use strict";
 
 	/*
 	 * ------------- TITLE CLASS --------------
 	 */
-	function Title(context, name) {
-		Control.call(this, context, name);
+	function Title(context, path) {
+		Control.call(this, context, path);
 
 		this.element.css({
-			'margin' : 'auto',
-			'margin-left' : '0',
-			'overflow' : 'hidden',
-			'white-space' : 'nowrap',
-			'text-overflow' : 'ellipsis',
-			'pointer-events' : 'none'
+			'margin-right': '4px',
+			'overflow': 'hidden',
+			'white-space': 'nowrap',
+			'text-overflow': 'ellipsis',
+			'pointer-events': 'none'
 		});
 	}
 	Title.prototype = Object.create(Control.prototype);
@@ -27,21 +26,43 @@ define([ './Control', './primitives' ], function(Control, primitives) {
 	/*
 	 * ------------- HANDLE CLASS --------------
 	 */
-	function Handle(context, name) {
-		Control.call(this, context, name);
+	function Handle(context, path) {
+		Control.call(this, context, path);
 
-		this.element.attr({
-			'tabindex' : 0
-		}).css({
-			'display' : 'flex',
-			'justify-content' : 'space-between'
+		this.element.css({
+			'display': 'flex',
+			'justify-content': 'space-between',
+			'align-items': 'center'
+		}).attr({
+			'tabindex': 0
 		});
 
-		$('<div class="tab-handle-title" name="title"></div>').appendTo(this.element);
+		$('<div>').attr({
+			'name': 'title'
+		}).appendTo(this.element);
 		this.title = new Title(this, '*/title');
 
-		$('<button style="font-size: 110%;" name="close">&#x2716</button>').appendTo(this.element);
-		this.btnClose = new primitives.Button(this, '*/close', this.context.destroy.bind(this.context));
+		$('<div>').css({
+			'cursor': 'default',
+			'font-size': '1.8em',
+			'padding-bottom': '2px'
+		}).attr({
+			'name': 'close'
+		}).appendTo(this.element);
+
+		this.btnClose = new primitives.Button(this, '*/close', '', {}).setView('&#xD7').setHandler(function() {
+			this.context.destroy();
+		}.bind(this));
+
+		this.element.on({
+			mousedown: function(event) {
+				if (event.which === 1) {
+					event.preventDefault();
+					event.stopPropagation();
+					this.send('handle:mousedown', event);
+				}
+			}.bind(this)
+		})
 	}
 	Handle.prototype = Object.create(Control.prototype);
 	Handle.prototype.constructor = Handle;
@@ -49,63 +70,86 @@ define([ './Control', './primitives' ], function(Control, primitives) {
 	/*
 	 * ------------- TAB CLASS --------------
 	 */
-	function Tab(context, contentBuilder) {
-		Control.call(this, context, 'body', 'create:<div class="tab" name="tab"></div>');
+	function Tab(context) {
+		Control.call(this, context, 'body', 'create:<div tabindex=0 name="tab"></div>');
 
-		this.element.attr({
-			'tabindex' : 0
-		}).css({
-			'height' : '100%',
-			'width' : '100%',
-			'display' : 'flex'
+		this.root = this.context;
+
+		this.element.addClass('tab').css({
+			'height': '100%'
 		});
 
 		/* ------------ handle ------------ */
-		$('<div class="tab-handle" name="handle"></div>').appendTo(this.element);
+		$('<div>').addClass('tab-handle').attr({
+			'name': 'handle'
+		}).appendTo(this.element);
 		this.handle = new Handle(this, 'handle');
 
 		/* ------------ body ------------ */
-		$('<div class="tab-content" name="content"></div>').css({
-			'flex' : '1 0 100%',
-			'display' : 'flex'
+		var bodyElement = $('<div>').addClass('tab-body').css({
+			'height': '100%'
+		}).attr({
+			'name': 'body'
 		}).appendTo(this.element);
-		this.content = contentBuilder(this);
 
-		var bodyElement = $('<div class="tab-body" name="body"></div>').css({
-			'flex' : '1 0 100%',
-			'display' : 'flex'
-		});
-		this.content.element.wrap(bodyElement);
-
-		/* ------------ tab ------------ */
-		this.content.element.hide().fadeTo(400, 1);
+		$('<div>').addClass('tab-content').css({
+			'height': '100%',
+			'display': 'flex'
+		}).attr({
+			'name': 'tab-content'
+		}).appendTo(bodyElement);
 	}
 	Tab.prototype = Object.create(Control.prototype);
 	Tab.prototype.constructor = Tab;
 
 	Tab.prototype.on = function(control, eventType, data) {
-		if ([ 'control:focusin' ].includes(eventType)) {
+		if (['control:focusin'].includes(eventType)) {
 			this.send(eventType, data);
 			return false;
 		}
-		if ([ 'control:tabulate' ].includes(eventType)) {
+		if (['panel:loopend'].includes(eventType)) {
 			control.nextControl(null, data);
 			return false;
 		}
-		if ([ 'setHeader' ].includes(eventType) && (control.context === this)) {
+		if (['content:request.route'].includes(eventType)) {
+			Object.assign(data, {
+				route: this.route
+			});
+			return false;
+		}
+		if (['control:destroy'].includes(eventType)) {
+			this.destroy(data);
+			return false;
+		}
+		if (['handle:mousedown'].includes(eventType) && (control.context === this)) {
+			this.send(eventType);
+			return false;
+		}
+		if (['setHeader'].includes(eventType) && (control.context === this)) {
 			this.setHeader(data);
 		}
-		if ([ 'setRoute' ].includes(eventType) && (control.context === this)) {
-			this.setRoute(data);
-		}
+	}
+
+	Tab.prototype.setActiveStatus = function(status) {
+		this.handle.element.toggleClass('tab-handle-selected', ['active', 'inactive'].includes(status));
+		return Control.prototype.setActiveStatus.call(this, status);
 	}
 
 	Tab.prototype.getDefaultActiveElement = function() {
 		return this.content;
 	}
 
-	Tab.prototype.destroy = function() {
-		this.send('tab:destroy');
+	Tab.prototype.setContent = function(contentBuilder) {
+		this.element.find('[name="tab-content"]').html('');
+		this.content = contentBuilder(this, 'body/tab-content');
+		this.content.element.hide().fadeTo(400, 1);
+
+		return this;
+	}
+
+	Tab.prototype.setTabId = function(tabId) {
+		this.tabId = tabId;
+		return this;
 	}
 
 	Tab.prototype.setHeader = function(data) {
@@ -113,9 +157,8 @@ define([ './Control', './primitives' ], function(Control, primitives) {
 		return this;
 	}
 
-	Tab.prototype.setRoute = function(route) {
-		this.route = route;
-		return this;
+	Tab.prototype.destroy = function() {
+		return this.send('control:destroy');
 	}
 
 	return Tab;
